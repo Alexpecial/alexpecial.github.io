@@ -1,5 +1,5 @@
 # Site settings
-title: Hyun-Myung's research website
+title: Computational Science Laboratory
 email: hmwoo@inu.ac.kr
 description: > # this means to ignore newlines until "baseurl:"
 baseurl: "" # the subpath of your site, e.g. /blog/
