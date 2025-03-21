@@ -9,11 +9,95 @@
                 <p></p>
                 <h2 class="section-heading">Undergraduate Students</h2>
                 <p></p>
-                <!-- <hr class="light"> -->
-                <p class="text-faded">Taeyeong Jang</p>
-                <p class="text-faded">Jiho Han</p>
-                <p class="text-faded">Yoonsang Park</p>
             </div>
         </div>
+        
+        <!-- 학생 카드 섹션 -->
+        <div class="row">
+            <!-- 첫 번째 학생 -->
+            <div class="col-md-6 text-left student-card">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="../img/HM.jpg" alt="Taeyeong Jang" class="img-responsive student-photo">
+                    </div>
+                    <div class="col-md-8">
+                        <h4 class="student-name">Taeyeong Jang</h4>
+                        <p class="text-faded student-program">Undergraduate Program</p>
+                        <p class="text-faded student-interests">Research Interests: Machine Learning, Optimization</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 두 번째 학생 -->
+            <div class="col-md-6 text-left student-card">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="../img/HM.jpg" alt="Jiho Han" class="img-responsive student-photo">
+                    </div>
+                    <div class="col-md-8">
+                        <h4 class="student-name">Jiho Han</h4>
+                        <p class="text-faded student-program">Undergraduate Program</p>
+                        <p class="text-faded student-interests">Research Interests: Bioinformatics, Data Mining</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 추가 학생을 위한 다음 줄 -->
+        <div class="row" style="margin-top: 20px;">
+            <!-- 세 번째 학생 -->
+            <div class="col-md-6 text-left student-card">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="../img/HM.jpg" alt="Yoonsang Park" class="img-responsive student-photo">
+                    </div>
+                    <div class="col-md-8">
+                        <h4 class="student-name">Yoonsang Park</h4>
+                        <p class="text-faded student-program">Undergraduate Program</p>
+                        <p class="text-faded student-interests">Research Interests: Computational Materials Science</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 네 번째 학생 (샘플) -->
+            <div class="col-md-6 text-left student-card">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="../img/HM.jpg" alt="New Student" class="img-responsive student-photo">
+                    </div>
+                    <div class="col-md-8">
+                        <h4 class="student-name">New Student</h4>
+                        <p class="text-faded student-program">Undergraduate Program</p>
+                        <p class="text-faded student-interests">Research Interests: Deep Learning, Applied Mathematics</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 추가 스타일 -->
+        <style>
+            .student-card {
+                margin-bottom: 20px;
+                padding: 15px;
+                border-radius: 5px;
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+            .student-photo {
+                border-radius: 5px;
+                max-width: 100%;
+            }
+            .student-name {
+                color: white;
+                margin-top: 0;
+                margin-bottom: 10px;
+            }
+            .student-program {
+                font-style: italic;
+                margin-bottom: 5px;
+            }
+            .student-interests {
+                line-height: 1.4;
+            }
+        </style>
     </div>
 </section>
