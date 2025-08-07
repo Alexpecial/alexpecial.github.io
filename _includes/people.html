@@ -1,107 +1,175 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Computational Science Laboratory - People</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 font-sans">
-    <div class="container mx-auto px-4 py-12">
-        <!-- Header Section -->
-        <header class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-gray-800">Computational Science Laboratory</h1>
-            <p class="text-xl text-gray-600 mt-2">Incheon National University</p>
-        </header>
-
-        <!-- Openings Section -->
-        <section class="bg-white p-6 rounded-lg shadow-md mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Openings</h2>
-            <p class="text-gray-700">
-                Our Computational Science Laboratory is currently accepting applications for Ph.D., MS, and Undergraduate research positions. These opportunities involve conducting cutting-edge research in mathematical optimization and machine/deep learning to address complex scientific and engineering challenges in fields such as bioinformatics, computational materials science, and applied mathematics. Interested candidates are encouraged to reach out via the contact page for further information.
-            </p>
-        </section>
-
-        <!-- Undergraduate Students Section -->
-        <section class="bg-white p-6 rounded-lg shadow-md mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Undergraduate Students</h2>
-            <div class="space-y-6">
-                <!-- Student 1 -->
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-800">Taeyeong Jang</h3>
-                    <p class="text-gray-600">Undergraduate Intern</p>
-                    <p class="text-gray-700"><strong>Research Interests:</strong> Comparative biological network analysis, Multi-modal deep learning</p>
-                </div>
-                <!-- Student 2 -->
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-800">Juhyun Yeom</h3>
-                    <p class="text-gray-600">Undergraduate Intern</p>
-                    <p class="text-gray-700"><strong>Research Interests:</strong> Deep Learning</p>
-                </div>
-                <!-- Student 3 -->
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-800">Jiho Han</h3>
-                    <p class="text-gray-600">Undergraduate Intern</p>
-                    <p class="text-gray-700"><strong>Research Interests:</strong> Deep Learning for Medical Imaging</p>
-                </div>
-                <!-- Student 4 -->
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-800">Yoonsang Park</h3>
-                    <p class="text-gray-600">Undergraduate Intern</p>
-                    <p class="text-gray-700"><strong>Research Interests:</strong> Semi-supervised learning</p>
-                </div>
-                <!-- Student 5 -->
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-800">Chanhoe Kim</h3>
-                    <p class="text-gray-600">Undergraduate Intern</p>
-                    <p class="text-gray-700"><strong>Research Interests:</strong> Optimal computational screening campaign</p>
-                </div>
+<section class="bg-primary" id="people">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-2 text-left">
+                <h2 class="section-heading">Openings</h2>
+                <p></p>
+                <p class="text-faded">Our Computational Science Laboratory is currently accepting applications for Ph.D., MS, and Undergraduate research positions. These opportunities involve conducting cutting-edge research in mathematical optimization and machine/deep learning to address complex scientific and engineering challenges in fields such as bioinformatics, computational materials science, and applied mathematics. Interested candidates are encouraged to reach out via the contact page for further information.</p>
             </div>
-        </section>
+        </div>
+        
+        <!-- PhD 학생 섹션 -->
+<!--         <div class="row">
+            <div class="col-lg-10 col-lg-offset-2 text-left">
+                <h2 class="section-heading">Ph.D. Students</h2>
+            </div>
+        </div> -->
+        
+        <!-- PhD 학생 1 -->
+<!--         <div class="row student-row">
+            <div class="col-md-2 col-md-offset-2">
+                <img src="../img/HM.jpg" alt="PhD Student 1" class="img-responsive student-photo" style="height: 200px; width: auto;">
+            </div>
+            <div class="col-md-8">
+                <h4 class="student-name">PhD Student Name 1</h4>
+                <p class="text-faded student-program">Ph.D. Program</p>
+                <p class="text-faded student-interests">Research Interests: Advanced Machine Learning, Neural Networks, Optimization Algorithms</p>
+            </div>
+        </div> -->
+        
+        <!-- PhD 학생 2 -->
+<!--         <div class="row student-row">
+            <div class="col-md-2 col-md-offset-2">
+                <img src="../img/HM.jpg" alt="PhD Student 2" class="img-responsive student-photo" style="height: 200px; width: auto;">
+            </div>
+            <div class="col-md-8">
+                <h4 class="student-name">PhD Student Name 2</h4>
+                <p class="text-faded student-program">Ph.D. Program</p>
+                <p class="text-faded student-interests">Research Interests: Computational Materials Science, Molecular Modeling</p>
+            </div>
+        </div> -->
+        
+        <!-- MS 학생 섹션 -->
+<!--         <div class="row">
+            <div class="col-lg-10 col-lg-offset-2 text-left">
+                <h2 class="section-heading">M.S. Students</h2>
+            </div>
+        </div> -->
+        
+        <!-- MS 학생 1 -->
+<!--         <div class="row student-row">
+            <div class="col-md-2 col-md-offset-2">
+                <img src="../img/HM.jpg" alt="MS Student 1" class="img-responsive student-photo" style="height: 200px; width: auto;">
+            </div>
+            <div class="col-md-8">
+                <h4 class="student-name">MS Student Name 1</h4>
+                <p class="text-faded student-program">M.S. Program</p>
+                <p class="text-faded student-interests">Research Interests: Data Mining, Bioinformatics</p>
+            </div>
+        </div> -->
+        
+        <!-- MS 학생 2 -->
+<!--         <div class="row student-row">
+            <div class="col-md-2 col-md-offset-2">
+                <img src="../img/HM.jpg" alt="MS Student 2" class="img-responsive student-photo" style="height: 200px; width: auto;">
+            </div>
+            <div class="col-md-8">
+                <h4 class="student-name">MS Student Name 2</h4>
+                <p class="text-faded student-program">M.S. Program</p>
+                <p class="text-faded student-interests">Research Interests: Statistical Learning, Pattern Recognition</p>
+            </div>
+        </div> -->
+        
+        <!-- Undergraduate 학생 섹션 -->
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-2 text-left">
+                <h2 class="section-heading">Undergraduate Students</h2>
+            </div>
+        </div>
+        
+        <div class="row student-row">
+            <div class="col-md-2 col-md-offset-2">
+                <img src="../img/tyj.jpg" alt="Taeyeong Jang" class="img-responsive student-photo" style="height: 200px; width: auto;">
+            </div>
+            <div class="col-md-8">
+                <h4 class="student-name">Taeyeong Jang</h4>
+                <p class="text-faded student-program">Undergraduate Intern</p>
+                <p class="text-faded student-interests">Research Interests: Comparative biological network analysis, Multi-modal deep learning</p>
+            </div>
+        </div>
 
-        <!-- Footer -->
-        <footer class="text-center text-gray-600">
-            <p>&copy; 2025 Computational Science Laboratory. All rights reserved.</p>
-        </footer>
+        <div class="row student-row">
+            <div class="col-md-2 col-md-offset-2">
+                <img src="../img/jhy.jpeg" alt="Juhyun Yeom" class="img-responsive student-photo" style="height: 200px; width: auto;">
+            </div>
+            <div class="col-md-8">
+                <h4 class="student-name">Juhyun Yeom</h4>
+                <p class="text-faded student-program">Undergraduate Intern</p>
+                <p class="text-faded student-interests">Research Interests: Deep Learning</p>
+            </div>
+        </div>
+
+        <div class="row student-row">
+            <div class="col-md-2 col-md-offset-2">
+                <img src="../img/jhh.jpg" alt="Jiho Han" class="img-responsive student-photo" style="height: 200px; width: auto;">
+            </div>
+            <div class="col-md-8">
+                <h4 class="student-name">Jiho Han</h4>
+                <p class="text-faded student-program">Undergraduate Intern</p>
+                <p class="text-faded student-interests">Research Interests: Deep Learning for Medical Imaging</p>
+            </div>
+        </div>
+
+        <!-- <div class="row student-row">
+            <div class="col-md-2 col-md-offset-2">
+                <img src="../img/esl.jpg" alt="Lee Eun Seok" class="img-responsive student-photo" style="height: 200px; width: auto;">
+            </div>
+            <div class="col-md-8">
+                <h4 class="student-name">Lee Eun Seok</h4>
+                <p class="text-faded student-program">Undergraduate Intern</p>
+                <p class="text-faded student-interests">Research Interests: Deep learning</p>
+            </div>
+        </div> -->
+
+        <div class="row student-row">
+            <div class="col-md-2 col-md-offset-2">
+                <img src="../img/ysp.jpe" alt="Yoonsang Park" class="img-responsive student-photo" style="height: 200px; width: auto;">
+            </div>
+            <div class="col-md-8">
+                <h4 class="student-name">Yoonsang Park</h4>
+                <p class="text-faded student-program">Undergraduate Intern</p>
+                <p class="text-faded student-interests">Research Interests: Semi-supervised learning</p>
+            </div>
+        </div>
+
+        <div class="row student-row">
+            <div class="col-md-2 col-md-offset-2">
+                <img src="../img/chk.jpeg" alt="Chanhoe Kim" class="img-responsive student-photo" style="height: 200px; width: auto;">
+            </div>
+            <div class="col-md-8">
+                <h4 class="student-name">Chanhoe Kim</h4>
+                <p class="text-faded student-program">Undergraduate Intern</p>
+                <p class="text-faded student-interests">Research Interests: Optimal computational screening campaign</p>
+            </div>
+        </div>
+        
+        <!-- 추가 스타일 -->
+        <style>
+            .student-row {
+                margin-bottom: 25px;
+                padding: 15px;
+            }
+            .student-photo {
+                border-radius: 5px;
+                max-width: 100%;
+                margin-bottom: 10px;
+            }
+            .student-name {
+                color: white;
+                margin-top: 0;
+                margin-bottom: 10px;
+            }
+            .student-program {
+                font-style: italic;
+                margin-bottom: 5px;
+            }
+            .student-interests {
+                line-height: 1.4;
+            }
+            .section-heading {
+                margin-top: 30px;
+                margin-bottom: 20px;
+            }
+        </style>
     </div>
-</body>
-</html>
+</section>

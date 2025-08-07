@@ -1,118 +1,46 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professor Hyun-Myung Woo</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 font-sans">
-    <div class="container mx-auto px-4 py-12">
-        <!-- Header Section -->
-        <header class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-gray-800">Hyun-Myung Woo</h1>
-            <p class="text-xl text-gray-600 mt-2">Assistant Professor, Department of Biomedical & Robotics</p>
-            <p class="text-lg text-gray-600">Incheon National University</p>
-        </header>
-
-        <!-- Education Section -->
-        <section class="bg-white p-6 rounded-lg shadow-md mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Education</h2>
-            <ul class="list-disc pl-5 space-y-3 text-gray-700">
-                <li><strong>Ph.D. in Electrical & Computer Engineering</strong><br>Texas A&M University, 2022</li>
-                <li><strong>MS in Computer Science</strong><br>Yonsei University, 2010</li>
-                <li><strong>BA of Engineering</strong><br>Yonsei University, 2008</li>
-            </ul>
-        </section>
-
-        <!-- Experience Section -->
-        <section class="bg-white p-6 rounded-lg shadow-md mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Experience</h2>
-            <ul class="space-y-4 text-gray-700">
-                <li>
-                    <strong>Assistant Professor</strong><br>Incheon National University<br>Mar. 2023 - Present
-                </li>
-                <li>
-                    <strong>Research Associate</strong><br>Brookhaven National Laboratory<br>Sep. 2022 - Feb. 2023
-                </li>
-                <li>
-                    <strong>Research Assistant</strong><br>Texas A&M University<br>Sep. 2017 - Dec. 2017, Sep. 2019 - Aug. 2022
-                </li>
-                <li>
-                    <strong>Teaching Assistant</strong><br>Texas A&M University<br>Sep. 2015 - May 2016, Sep. 2018 - May 2019
-                </li>
-                <li>
-                    <strong>Research Engineer</strong><br>LG Electronics<br>Sep. 2016 - Mar. 2017
-                </li>
-                <li>
-                    <strong>Lecturer</strong><br>Yonsei University<br>Mar. 2014 - Jun. 2014
-                </li>
-                <li>
-                    <strong>Research Engineer</strong><br>IDIS<br>Jan. 2010 - Apr. 2014
-                </li>
-                <li>
-                    <strong>Teaching Assistant</strong><br>Yonsei University<br>Mar. 2008 - Feb. 2010
-                </li>
-            </ul>
-        </section>
-
-        <!-- Honors & Awards Section -->
-        <section class="bg-white p-6 rounded-lg shadow-md mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Honors & Awards</h2>
-            <ul class="list-disc pl-5 space-y-3 text-gray-700">
-                <li>Academic Research Award, Incheon National University, Mar. 2024</li>
-                <li>Fall Excellence in Teaching Award, Incheon National University, Mar. 2024</li>
-                <li>The Grand Prize, IDIS and ETNEWS Science and Technology & IT Paper Contest, Dec. 2009</li>
-                <li>The Best Paper Award, KIIECT Fall Conference, Oct. 2009</li>
-                <li>Summa Cum Laude, Yonsei University, Feb. 2008</li>
-                <li>An Honor Prize for Academic Excellence, Yonsei University, Fall 2005, Spring 2006, 2007</li>
-                <li>Scholarship for Academic Excellence, Yonsei University, Fall 2005 - 2007</li>
-            </ul>
-        </section>
-
-        <!-- Footer -->
-        <footer class="text-center text-gray-600">
-            <p>&copy; 2025 Hyun-Myung Woo. All rights reserved.</p>
-        </footer>
+<section class="bg-primary" id="professor">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-2 text-left">
+                <h1>Hyun-Myung Woo</h1>
+                <p class="no-spacing" style="margin-top: 0; margin-bottom: 0;">Assistant Professor</p>
+                <p class="no-spacing" style="margin-top: 0; margin-bottom: 0;">Department of Biomedical & Robotics</p>
+                <p class="no-spacing" >Incheon National University</p>
+                <p></p>
+                <p></p>
+                <h2 class="section-heading">Educations</h2>
+                <p></p>
+                <!-- <hr class="light"> -->
+                <p class="text-faded">Ph.D. in Electrical & Computer Engineering, Texas A&M University (2022)</p>
+                <p class="text-faded">MS in Computer Science, Yonsei University (2010)</p>
+                <p class="text-faded">BA of Engineering, Yonsei University (2008) </p>
+                <!-- <a href="#" class="btn btn-default btn-xl">Get Started!</a> -->
+                <p></p>
+                <h2 class="section-heading">Experience</h2>
+                <p></p>
+                <!-- <hr class="light"> -->
+                <p class="text-faded">Assistant Professor, Incheon National University Mar. 2023 - present</p>
+                <p class="text-faded">Research Associate, Brookhaven National Laboratory Sep. 2022 - Feb. 2023</p>
+                <p class="text-faded">Research Assistant, Texas A&M University Sep. 2017 - Dec. 2017 and Sep. 2019 - Aug 2022</p>
+                <p class="text-faded">Teaching Assistant, Texas A&M University Sep. 2015 - May 2016 and Sep. 2018 - May 2019</p>
+                <p class="text-faded">Research Engineer, LG Electronics Sep. 2016 - Mar. 2017</p>
+                <p class="text-faded">Lecturer, Yonsei University Mar. 2014 - Jun. 2014</p>
+                <p class="text-faded">Research Engineer, IDIS Jan. 2010 - Apr. 2014</p>
+                <p class="text-faded">Teaching Assistant, Yonsei University Mar. 2008 - Feb. 2010</p>
+                <!-- <a href="#" class="btn btn-default btn-xl">Get Started!</a> -->
+                <p></p>
+                <h2 class="section-heading">Honor</h2>
+                <p></p>
+                <!-- <hr class="light"> -->
+                <p class="text-faded">2023 Academic Research Award, Incheon National University Mar. 2024</p>
+                <p class="text-faded">2023 Fall Excellence in Teaching Award, Incheon National University Mar. 2024</p>
+                <p class="text-faded">The Grand Prize, IDIS and ETNEWS Science and Technology & IT paper contest Dec. 2009</p>
+                <p class="text-faded">The Best Paper Award, KIIECT Fall Conference Oct. 2009</p>
+                <p class="text-faded">Summa Cum Laude, Yonsei University Feb. 2008</p>
+                <p class="text-faded">An Honor Prize for Academic Excellence, Yonsei University Fall 2005, and Spring 2006 and 2007</p>
+                <p class="text-faded">Scholarship for Academic Excellence for Academic Excellence, Yonsei University Fall 2005 - 2007</p>
+                <!-- <a href="#" class="btn btn-default btn-xl">Get Started!</a> -->
+            </div>
+        </div>
     </div>
-</body>
-</html>
+</section>
