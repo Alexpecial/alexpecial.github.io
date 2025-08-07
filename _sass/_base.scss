@@ -6,16 +6,22 @@ body {
 
 body {
     @include serif-font;
+    background-color: #FAFAFA;
 }
 
 hr {
-    border-color: $theme-primary;
-    border-width: 3px;
-    max-width: 50px;
+    border-color: $theme-accent;
+    border-width: 2px;
+    max-width: 100px;
+    margin: 2rem auto;
 }
 
 hr.light {
-    border-color: white;
+    border-color: rgba(white, 0.8);
+}
+
+hr.primary {
+    border-color: $theme-primary;
 }
 
 a {
@@ -23,7 +29,8 @@ a {
     color: $theme-primary;
     &:hover,
     &:focus {
-        color: darken($theme-primary, 10%);
+        color: $theme-secondary;
+        text-decoration: none;
     }
 }
 
@@ -34,16 +41,20 @@ h4,
 h5,
 h6 {
     @include sans-serif-font;
+    font-weight: 600;
+    color: $theme-dark;
 }
 
 p {
     font-size: 16px;
-    line-height: 1.5;
+    line-height: 1.8;
     margin-bottom: 20px;
+    color: #4A4A4A;
 }
 
 .bg-primary {
-    background-color: $theme-primary;
+    background: linear-gradient(135deg, $theme-primary 0%, $theme-secondary 100%);
+    color: white;
 }
 
 .bg-dark {
@@ -51,12 +62,17 @@ p {
     color: white;
 }
 
+.bg-light {
+    background-color: $theme-light;
+    color: $theme-dark;
+}
+
 .text-faded {
-    color: rgba(white, .7);
+    color: rgba(white, .95);
 }
 
 section {
-    padding: 100px 0;
+    padding: 80px 0;
 }
 
 aside {
@@ -67,21 +83,24 @@ aside {
     padding: 0;
 }
 
-// Navigation
-
+// Enhanced Navigation
 .navbar-default {
     background-color: white;
-    border-color: rgba($theme-dark, .5);
+    border-color: rgba($theme-dark, .1);
     @include sans-serif-font;
     @include transition-all;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    
     .navbar-header .navbar-brand {
         color: $theme-primary;
         @include sans-serif-font;
         font-weight: 700;
         text-transform: uppercase;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
         &:hover,
         &:focus {
-            color: darken($theme-primary, 10%);
+            color: $theme-secondary;
         }
     }
     .nav {
@@ -89,9 +108,10 @@ aside {
             > a,
             > a:focus {
                 text-transform: uppercase;
-                font-weight: 700;
+                font-weight: 600;
                 font-size: 13px;
                 color: $theme-dark;
+                letter-spacing: 0.5px;
                 &:hover {
                     color: $theme-primary;
                 }
@@ -101,6 +121,7 @@ aside {
                 > a:focus {
                     color: $theme-primary !important;
                     background-color: transparent;
+                    border-bottom: 3px solid $theme-accent;
                     &:hover {
                         background-color: transparent;
                     }
@@ -109,31 +130,33 @@ aside {
         }
     }
     @media (min-width: 768px) {
-        background-color: transparent;
-        border-color: rgba(white, .3);
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-color: transparent;
         .navbar-header .navbar-brand {
-            color: rgba(white, .7);
+            color: $theme-primary;
             &:hover,
             &:focus {
-                color: white;
+                color: $theme-secondary;
             }
         }
         .nav > li > a,
         .nav > li > a:focus {
-            color: rgba(white, .7);
+            color: $theme-dark;
             &:hover {
-                color: white;
+                color: $theme-primary;
             }
         }
         &.affix {
             background-color: white;
-            border-color: rgba($theme-dark, .5);
+            border-color: rgba($theme-dark, .1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             .navbar-header .navbar-brand {
                 color: $theme-primary;
                 font-size: 14px;
                 &:hover,
                 &:focus {
-                    color: darken($theme-primary, 10%);
+                    color: $theme-secondary;
                 }
             }
             .nav > li > a,
@@ -147,8 +170,7 @@ aside {
     }
 }
 
-// Homepage Header
-
+// Homepage Header with gradient overlay
 header {
     position: relative;
     width: 100%;
@@ -158,31 +180,47 @@ header {
     background-image: url('../img/IMG_0229.jpeg');
     text-align: center;
     color: white;
+    
+    &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba($theme-primary, 0.9) 0%, rgba($theme-secondary, 0.7) 100%);
+        z-index: 1;
+    }
+    
     .header-content {
         position: relative;
         text-align: center;
         padding: 100px 15px 100px;
         width: 100%;
+        z-index: 2;
         .header-content-inner {
             h1 {
                 font-weight: 700;
                 text-transform: uppercase;
                 margin-top: 0;
                 margin-bottom: 0;
+                font-size: 3rem;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             }
             hr {
                 margin: 30px auto;
+                border-color: $theme-accent;
+                border-width: 3px;
             }
             p {
                 font-weight: 300;
-                color: rgba(white, .7);
-                font-size: 16px;
+                color: rgba(white, .95);
+                font-size: 18px;
                 margin-bottom: 50px;
             }
         }
     }
     @media (min-width: 768px) {
-        // min-height: 100%;
         .header-content {
             position: absolute;
             top: 50%;
@@ -194,8 +232,11 @@ header {
                 max-width: 1000px;
                 margin-left: auto;
                 margin-right: auto;
+                h1 {
+                    font-size: 4rem;
+                }
                 p {
-                    font-size: 18px;
+                    font-size: 20px;
                     max-width: 80%;
                     margin-left: auto;
                     margin-right: auto;
@@ -205,10 +246,25 @@ header {
     }
 }
 
-// Sections
-
+// Enhanced Sections
 .section-heading {
     margin-top: 0;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: $theme-dark;
+    position: relative;
+    padding-bottom: 1rem;
+    
+    &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: $theme-accent;
+    }
 }
 
 .service-box {
@@ -231,7 +287,7 @@ header {
         color: white;
         opacity: 0;
         display: block;
-        background: rgba( $theme-primary, .9 );
+        background: linear-gradient(135deg, rgba($theme-primary, .95), rgba($theme-secondary, .95));
         position: absolute;
         bottom: 0;
         text-align: center;
@@ -253,6 +309,7 @@ header {
                 text-transform: uppercase;
                 font-weight: 600;
                 font-size: 14px;
+                color: $theme-accent;
             }
             .project-name {
                 font-size: 18px;
@@ -262,18 +319,6 @@ header {
     &:hover {
         .portfolio-box-caption {
             opacity: 1;
-        }
-    }
-    @media (min-width: 768px) {
-        .portfolio-box-caption {
-            .portfolio-box-caption-content {
-                .project-category {
-                    font-size: 16px;
-                }
-                .project-name {
-                    font-size: 22px;
-                }
-            }
         }
     }
 }
@@ -294,13 +339,27 @@ header {
     padding-left:0;
 }
 
-// Button Styles
+// Enhanced Button Styles
 .btn-default {
     @include button-variant($theme-dark, white, white);
 }
 
 .btn-primary {
     @include button-variant(white, $theme-primary, $theme-primary);
+    box-shadow: 0 4px 6px rgba($theme-primary, 0.3);
+    &:hover {
+        box-shadow: 0 6px 12px rgba($theme-primary, 0.4);
+        transform: translateY(-2px);
+    }
+}
+
+.btn-accent {
+    @include button-variant($theme-dark, $theme-accent, $theme-accent);
+    box-shadow: 0 4px 6px rgba($theme-accent, 0.3);
+    &:hover {
+        box-shadow: 0 6px 12px rgba($theme-accent, 0.4);
+        transform: translateY(-2px);
+    }
 }
 
 .btn {
@@ -309,30 +368,42 @@ header {
     border-radius: 300px;
     font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
 }
 
 .btn-xl {
-    padding: 15px 30px;
+    padding: 15px 40px;
+    font-size: 16px;
 }
 
 // Contact
-#contact .fa {
-    color: $theme-dark;
-    font-size: 4em;
+#contact {
+    background: linear-gradient(135deg, $theme-light 0%, white 100%);
+    
+    .fa {
+        color: $theme-primary;
+        font-size: 4em;
+        transition: all 0.3s ease;
+        
+        &:hover {
+            color: $theme-accent;
+            transform: scale(1.1);
+        }
+    }
 }
 
-// Extras
-// -- Highlight Color Customization
+// Selection Color
 ::-moz-selection {
     color: white;
     text-shadow: none;
-    background: $theme-dark;
+    background: $theme-primary;
 }
 
 ::selection {
     color: white;
     text-shadow: none;
-    background: $theme-dark;
+    background: $theme-primary;
 }
 
 img::selection {
@@ -346,6 +417,5 @@ img::-moz-selection {
 }
 
 body {
-    -webkit-tap-highlight-color: $theme-dark;
+    -webkit-tap-highlight-color: $theme-primary;
 }
-

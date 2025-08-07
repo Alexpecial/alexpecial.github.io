@@ -3,42 +3,96 @@
 
 @charset "utf-8";
 
-// Example Defaults
-// $base-font-family: Helvetica, Arial, sans-serif;
-// $base-font-size:   16px;
-// $small-font-size:  $base-font-size * 0.875;
-// $base-line-height: 1.5;
-
-// $spacing-unit:     30px;
-
-// $text-color:       #111;
-// $background-color: #fdfdfd;
-// $brand-color:      #2a7ae2;
-
-// $grey-color:       #828282;
-// $grey-color-light: lighten($grey-color, 40%);
-// $grey-color-dark:  darken($grey-color, 25%);
-
-// // Width of the content area
-// $content-width:    800px;
-
-// $on-palm:          600px;
-// $on-laptop:        800px;
-
-// Using media queries with like this:
-// @include media-query($on-palm) {
-//     .wrapper {
-//         padding-right: $spacing-unit / 2;
-//         padding-left: $spacing-unit / 2;
-//     }
-// }
-
-// variables.less
-$theme-primary: #0A4A9B;
-$theme-dark: #222;
+// New Professional Color Theme
+// Deep academic purple with gold accents for a sophisticated look
+$theme-primary: #4A148C;  // Deep Purple (전문적이고 아카데믹한 느낌)
+$theme-secondary: #7B1FA2; // Medium Purple
+$theme-accent: #D4AF37;    // Gold accent (품격있는 강조색)
+$theme-dark: #1A1A2E;      // Dark Navy (깊이감 있는 다크 톤)
+$theme-light: #F5F3F0;     // Warm off-white
+$theme-gray: #6C757D;      // Neutral gray
+$theme-success: #00897B;   // Teal for success states
 
 // Import partials from `sass_dir` (defaults to `_sass`)
 @import
         "mixins",
         "base"
 ;
+
+// Additional global styles for improved typography and spacing
+body {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+}
+
+.section-heading {
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    margin-bottom: 1.5rem;
+}
+
+.text-faded {
+    opacity: 0.95;
+}
+
+// Enhanced card-like sections
+.content-card {
+    background: white;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+}
+
+// Professional badge styling
+.badge-primary {
+    background-color: $theme-accent;
+    color: $theme-dark;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
+// Timeline styling for CV/Experience sections
+.timeline {
+    position: relative;
+    padding-left: 2rem;
+    
+    &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 2px;
+        background: linear-gradient(to bottom, $theme-primary, $theme-secondary);
+    }
+    
+    .timeline-item {
+        position: relative;
+        padding-bottom: 1.5rem;
+        
+        &:before {
+            content: '';
+            position: absolute;
+            left: -2.4rem;
+            top: 0.5rem;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: $theme-accent;
+            border: 2px solid white;
+            box-shadow: 0 0 0 3px rgba($theme-accent, 0.2);
+        }
+    }
+}
