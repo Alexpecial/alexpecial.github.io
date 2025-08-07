@@ -145,6 +145,12 @@ aside {
             }
         }
     }
+    // Mobile-specific adjustment for navbar-brand font size
+    @media (max-width: 767px) {
+        .navbar-header .navbar-brand {
+            font-size: 80%; // Approximately 20% smaller
+        }
+    }
 }
 
 // Homepage Header
@@ -348,4 +354,3 @@ img::-moz-selection {
 body {
     -webkit-tap-highlight-color: $theme-dark;
 }
-
