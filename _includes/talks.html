@@ -1,94 +1,21 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Computational Science Laboratory - Talks</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 font-sans">
-    <div class="container mx-auto px-4 py-12">
-        <!-- Header Section -->
-        <header class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-gray-800">Talks</h1>
-            <p class="text-xl text-gray-600 mt-2">Computational Science Laboratory</p>
-            <p class="text-lg text-gray-600">Incheon National University</p>
-        </header>
-
-        <!-- Talks Section -->
-        <section class="bg-white p-6 rounded-lg shadow-md mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Invited Talks & Presentations</h2>
-            <div class="space-y-4 text-gray-700">
-                <p>
-                    [8] Accelerating Bayesian Optimal Experimental Design using Deep Learning<br>Inha University, Apr. 29, 2025
-                </p>
-                <p>
-                    [7] Designing and Optimizing High-Throughput Virtual Screening Pipelines: A General Framework for Maximizing Computational Efficiency<br>KIIS Spring Conference - Special Session, Kumoh National Institute of Technology, Apr. 26, 2025
-                </p>
-                <p>
-                    [6] Accelerating Objective-Driven Optimal Experimental Design using Machine Learning<br>Yonsei University, Oct. 30, 2023
-                </p>
-                <p>
-                    [5] Accelerating Objective-Driven Optimal Experimental Design using Machine Learning<br>Sungkyunkwan University, Apr. 24, 2023
-                </p>
-                <p>
-                    [4] Optimal Decision Making in High-Throughput Virtual Screening Pipelines<br>BioSeminar, Texas A&M University, Apr. 29, 2022
-                </p>
-                <p>
-                    [3] Optimal Decision Making for Accelerating Scientific Discovery<br>Computational Science Initiative Seminar, Brookhaven National Laboratory, Mar. 25, 2022
-                </p>
-                <p>
-                    [2] Machine Learning Enabled Adaptive Wireless Power Transmission System for Neuroscience Study<br>BioSeminar, Texas A&M University, Oct. 23, 2020
-                </p>
-                <p>
-                    [1] Accurate Biological Network Alignment through an Iterative Optimal Mapping between Neighborhood Sets of Focal Nodes<br>BioSeminar, Texas A&M University, Oct. 4, 2019
-                </p>
+<section class="bg-primary" id="talks">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-lg-offset-0 text-center">
+                <h2 class="section-heading">talks</h2>
+                <hr class="light">
+                <div class="col-lg-12 col-lg-offset-0 text-left">
+                    <p class="text-faded">[8] "Accelerating Bayesian Optimal Experimental Design using Deep Learning," @ Inha University, Apr, 29, 2025.</p>
+                    <p class="text-faded">[7] "Designing and Optimizing High-Throughput Virtual Screening Pipelines: A General Framework for Maximizing Computational Efficiency," @ KIIS Spring Conference - special session, Kumoh National Institute of Technology, Apr, 26, 2025.</p>
+                    <p class="text-faded">[6] "Accelerating Objective-Driven Optimal Experimental Design using Machine Learning," @ Yonsei University, Oct, 30, 2023.</p>
+                    <p class="text-faded">[5] "Accelerating Objective-Driven Optimal Experimental Design using Machine Learning," @ Sungkyunkwan University, Apr, 24, 2023.</p>
+                    <p class="text-faded">[4] "Optimal Decision Making in High-Throughput Virtual Screening Pipelines," BioSeminar @ Texas A&M University, Apr, 29, 2022.</p>
+                    <p class="text-faded">[3] "Optimal decision making for accelerating scientific discovery," Computational Science Initiative Seminar @ Brookhaven National Laboratory, Mar, 25, 2022.</p>  
+                    <p class="text-faded">[2] "Machine Learning Enabled Adaptive Wireless Power Transmission System for Neuroscience Study," BioSeminar @ Texas A&M University, Oct, 23, 2020.</p>  
+                    <p class="text-faded">[1] "Accurate biological network alignment through an iterative optimal mapping between neighborhood sets of focal nodes," BioSeminar @ Texas A&M University, Oct, 4, 2019.</p>  
+                    <!-- <a href="#" class="btn btn-default btn-xl">Get Started!</a> -->
+                </div>
             </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="text-center text-gray-600">
-            <p>&copy; 2025 Computational Science Laboratory. All rights reserved.</p>
-        </footer>
+        </div>
     </div>
-</body>
-</html>
+</section>
