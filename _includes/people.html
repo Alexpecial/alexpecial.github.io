@@ -320,4 +320,75 @@
             .member-name {
                 color: #1A1A2E;
                 font-size: 1.3rem;
-                font-weight:
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+            }
+
+            .member-role {
+                color: #7B1FA2;
+                font-style: italic;
+                margin-bottom: 1rem;
+            }
+
+            .member-interests {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .interest-tag {
+                background: #F5F3F0;
+                color: #6C757D;
+                padding: 0.3rem 0.8rem;
+                border-radius: 15px;
+                font-size: 0.85rem;
+                transition: all 0.3s ease;
+            }
+
+            .interest-tag:hover {
+                background: linear-gradient(135deg, #D4AF37, #C19B2C);
+                color: white;
+            }
+
+            /* Future Sections */
+            .future-sections {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 2rem;
+            }
+
+            .future-section {
+                background: white;
+                border-radius: 12px;
+                padding: 2rem;
+                text-align: center;
+                border: 2px dashed #D4AF37;
+                opacity: 0.6;
+            }
+
+            .future-section h3 {
+                color: #4A148C;
+                margin-bottom: 1rem;
+            }
+
+            .future-section p {
+                color: #6C757D;
+                font-style: italic;
+            }
+
+            @media (max-width: 768px) {
+                .team-grid {
+                    grid-template-columns: 1fr;
+                }
+                
+                .team-section-title {
+                    font-size: 1.5rem;
+                }
+                
+                .title-decoration {
+                    width: 40px;
+                }
+            }
+        </style>
+    </div>
+</section>
