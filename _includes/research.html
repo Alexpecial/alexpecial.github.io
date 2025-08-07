@@ -1,293 +1,204 @@
-<section class="bg-light" id="research">
-    <div class="container">
-        <!-- Header -->
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2 class="section-heading" style="color: #4A148C; margin-bottom: 3rem;">Research Areas</h2>
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Projects</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .section-heading {
+            color: #4A148C;
+            margin-bottom: 3rem;
+        }
+        .projects-section {
+            margin-bottom: 3rem;
+        }
+        .projects-title {
+            color: #4A148C;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #D4AF37;
+        }
+        .projects-title i {
+            color: #D4AF37;
+            margin-right: 1rem;
+        }
+        .project-cards {
+            display: grid;
+            gap: 2rem;
+        }
+        .project-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(74, 20, 140, 0.15);
+            border-left-color: #D4AF37;
+        }
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .project-badge {
+            background: linear-gradient(135deg, #4A148C, #7B1FA2);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .project-title {
+            color: #1A1A2E;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+        }
+        .project-description {
+            color: #6C757D;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        .project-sub-item h5 {
+            color: #4A148C;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .project-sub-item p {
+            color: #6C757D;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <section class="bg-light" id="research">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading">Research</h2>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="projects-section">
+                        <h3 class="projects-title">
+                            <i class="fa fa-flask"></i>
+                            Research Areas
+                        </h3>
+                        
+                        <div class="project-cards">
+
+                            <div class="project-card">
+                                <div class="project-header">
+                                    <span class="project-badge">Scientific Machine Learning (sciML)</span>
+                                </div>
+                                <h4 class="project-title">Accelerating Objective-Driven Uncertainty Quantification & Optimal Experimental Design</h4>
+                                <div class="project-description">
+                                    <div class="project-sub-item">
+                                        <h5>Accelerating Optimal Experimental Design for Robust Synchronization of Uncertain Kuramoto Oscillator Models Using Machine Learning</h5>
+                                        <h6>Addressing the challenges posed by inherent uncertainties in complex dynamical systems, this study leverages machine learning to achieve robust synchronization of Kuramoto oscillators. By systematically exploring design parameters and establishing optimal control strategies, the proposed technique ensures resilient performance even in highly variable conditions. This advancement is instrumental in real-time control and analysis of dynamic systems.</h6>
+                                    </div>
+                                    <div class="project-sub-item">
+                                        <h5>Neural Message Passing for Objective-Based Uncertainty Quantification and Optimal Experimental Design</h5>
+                                        <h6>This work introduces a novel neural message-passing framework that quantifies experimental uncertainty while simultaneously determining the optimal design under resource constraints. By integrating domain-specific objectives into the uncertainty assessment, the methodology enhances experimental efficiency and reliability. The approach offers a versatile framework applicable to a range of scientific inquiries, thus expediting the research cycle.</h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="project-card">
+                                <div class="project-header">
+                                    <span class="project-badge">Optimal Decision Making under Uncertainty</span>
+                                </div>
+                                <h4 class="project-title">High-Throughput Virtual Screening Pipelines</h4>
+                                <div class="project-description">
+                                    <div class="project-sub-item">
+                                        <h5>Optimal Decision-Making in High-Throughput Virtual Screening Pipelines</h5>
+                                        <h6>This research develops an innovative decision-making algorithm tailored for large-scale virtual screening processes. By automating data processing and analysis, it significantly reduces both time and cost in selecting optimal experimental candidates. The method holds promise for accelerating breakthroughs in drug discovery, materials science, and other domains that rely on high-throughput evaluations, with ongoing extensions into reinforcement learning for policy optimization.</h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="project-card">
+                                <div class="project-header">
+                                    <span class="project-badge">Bioinformatics</span>
+                                </div>
+                                <h4 class="project-title">Biological Network Analysis and Generation</h4>
+                                <div class="project-description">
+                                    <div class="project-sub-item">
+                                        <h5>Comprehensive Updates in Network Synthesis Models to Create an Improved Benchmark for Network Alignment Algorithms</h5>
+                                        <h6>This study presents a state-of-the-art benchmark for network alignment by updating synthesis models with the latest biological data. Through rigorous statistical analysis of protein–protein interaction networks, it quantitatively captures complex structural features. The resulting framework provides a robust foundation for further advancements in network generation and analysis.</h6>
+                                    </div>
+                                </div>
+                                <h4 class="project-title">Biological Comparative Analysis</h4>
+                                <div class="project-description">
+                                    <div class="project-sub-item">
+                                        <h5>MONACO: Accurate Biological Network Alignment through Optimal Neighborhood Matching between Focal Nodes</h5>
+                                        <h6>By introducing an optimal neighborhood matching algorithm, this work significantly refines the alignment of protein–protein interaction (PPI) networks. It adeptly captures subtle interaction patterns, offering deeper insights into functional similarities and disease mechanisms. The method sets a new standard for comparative biological network analysis.</h6>
+                                        <h5>Network-Based RNA Structural Alignment Through Optimal Local Neighborhood Matching</h5>
+                                        <h6>Focusing on the three-dimensional structure of RNA molecules, this study employs a network-based approach to align RNA structures optimally. It quantifies both similarities and variations with high precision, thereby contributing to a better understanding of RNA function and interaction. This technique is poised to become a key tool in structural biology and genomics.</h6>
+                                    </div>
+                                </div>
+                                <h4 class="project-title">DNA/RNA Sequencing Data Analysis</h4>
+                                <div class="project-description">
+                                    <div class="project-sub-item">
+                                        <h6>Our research in DNA/RNA sequencing data analysis involves developing robust computational methods designed to decipher complex genomic information from high-throughput sequencing experiments. By leveraging state-of-the-art algorithms for sequence alignment, variant calling, and differential expression analysis, we are equipped to uncover genetic variations, expression patterns, and regulatory mechanisms underlying a wide range of biological processes and diseases. Integrating statistical models with advanced machine learning techniques, our approach is poised to enhance data accuracy and processing speed, thereby opening avenues for breakthroughs in personalized medicine, epigenomics, and single-cell sequencing technologies</h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="project-card">
+                                <div class="project-header">
+                                    <span class="project-badge">Statistical Signal Processing</span>
+                                </div>
+                                <h4 class="project-title">Wireless Communication Systems</h4>
+                                <div class="project-description">
+                                    <div class="project-sub-item">
+                                        <h5>Reduced-Complexity ML Signal Detection for Spatially Multiplexed Signal Transmission over MIMO Systems with Two Transmit Antennas</h5>
+                                        <h6>This research tackles the challenge of signal detection in MIMO systems by applying machine learning to reduce computational complexity. The proposed algorithm enhances detection accuracy and operational speed, thereby significantly improving real-time performance in wireless communications. Its implications extend to next-generation communication networks where rapid and reliable data transmission is paramount.</h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="project-card">
+                                <div class="project-header">
+                                    <span class="project-badge">Biomedical Applications</span>
+                                </div>
+                                <h4 class="project-title">Wireless Medical Devices for Therapeutic and Neuroscience Applications</h4>
+                                <div class="project-description">
+                                    <div class="project-sub-item">
+                                        <h5>AI-Enabled High-Throughput Wireless Telemetry for Effective Photodynamic Therapy</h5>
+                                        <h6>By integrating AI with high-speed wireless telemetry, this study revolutionizes photodynamic therapy through real-time monitoring and control. The automated data acquisition and analysis facilitate personalized treatment strategies, enhancing therapeutic outcomes. This non-invasive system is set to transform clinical practice in precision medicine.</6>
+                                        <h5>Machine Learning Enabled Adaptive Wireless Power Transmission System for Neuroscience Study</h5>
+                                        <h6>Targeting the unique challenges of neuroscience research, this work introduces an adaptive wireless power transmission system powered by machine learning. It dynamically optimizes power delivery to ensure stable data collection in non-invasive experimental setups. This breakthrough supports advanced neurophysiological studies and could redefine experimental paradigms in brain research.</6>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <!-- Research Areas Grid -->
-        <div class="research-grid">
-            
-            <!-- 1. Scientific Machine Learning -->
-            <div class="research-area">
-                <div class="area-header">
-                    <div class="area-number">01</div>
-                    <h3 class="area-title">Scientific Machine Learning (sciML)</h3>
-                </div>
-                <div class="area-content">
-                    <div class="research-topic">
-                        <h4>Uncertainty Quantification & Optimal Experimental Design</h4>
-                        <ul class="research-list">
-                            <li>
-                                <span class="research-subtitle">Kuramoto Oscillator Synchronization</span>
-                                <p>Machine learning-driven robust synchronization of uncertain dynamical systems with optimal control strategies for real-time applications.</p>
-                            </li>
-                            <li>
-                                <span class="research-subtitle">Neural Message Passing Framework</span>
-                                <p>Novel framework for quantifying experimental uncertainty while determining optimal designs under resource constraints.</p>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 2. Optimal Decision Making -->
-            <div class="research-area">
-                <div class="area-header">
-                    <div class="area-number">02</div>
-                    <h3 class="area-title">Optimal Decision Making under Uncertainty</h3>
-                </div>
-                <div class="area-content">
-                    <div class="research-topic">
-                        <h4>High-Throughput Virtual Screening</h4>
-                        <p>Innovative decision-making algorithms for large-scale virtual screening processes, automating data analysis to accelerate breakthroughs in drug discovery and materials science. Extensions into reinforcement learning for policy optimization.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 3. Bioinformatics -->
-            <div class="research-area">
-                <div class="area-header">
-                    <div class="area-number">03</div>
-                    <h3 class="area-title">Bioinformatics</h3>
-                </div>
-                <div class="area-content">
-                    <div class="research-subtopics">
-                        <div class="subtopic-card">
-                            <h4><i class="fa fa-network-wired"></i> Network Analysis</h4>
-                            <ul>
-                                <li>Protein-protein interaction network synthesis and benchmarking</li>
-                                <li>Statistical analysis of complex biological networks</li>
-                            </ul>
-                        </div>
-                        <div class="subtopic-card">
-                            <h4><i class="fa fa-exchange-alt"></i> Comparative Analysis</h4>
-                            <ul>
-                                <li>MONACO: Optimal neighborhood matching for PPI networks</li>
-                                <li>RNA structural alignment through network-based approaches</li>
-                            </ul>
-                        </div>
-                        <div class="subtopic-card">
-                            <h4><i class="fa fa-dna"></i> Sequencing Analysis</h4>
-                            <ul>
-                                <li>Advanced algorithms for variant calling and expression analysis</li>
-                                <li>Applications in personalized medicine and single-cell genomics</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 4. Statistical Signal Processing -->
-            <div class="research-area">
-                <div class="area-header">
-                    <div class="area-number">04</div>
-                    <h3 class="area-title">Statistical Signal Processing</h3>
-                </div>
-                <div class="area-content">
-                    <div class="research-topic">
-                        <h4>Wireless Communication Systems</h4>
-                        <p>Machine learning applications for reduced-complexity signal detection in MIMO systems, enhancing real-time performance in next-generation communication networks.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 5. Biomedical Applications -->
-            <div class="research-area">
-                <div class="area-header">
-                    <div class="area-number">05</div>
-                    <h3 class="area-title">Biomedical Applications</h3>
-                </div>
-                <div class="area-content">
-                    <div class="research-topic">
-                        <h4>Wireless Medical Devices</h4>
-                        <div class="application-cards">
-                            <div class="app-card">
-                                <i class="fa fa-lightbulb"></i>
-                                <h5>Photodynamic Therapy</h5>
-                                <p>AI-enabled wireless telemetry for real-time monitoring and personalized treatment</p>
-                            </div>
-                            <div class="app-card">
-                                <i class="fa fa-brain"></i>
-                                <h5>Neuroscience Systems</h5>
-                                <p>Adaptive wireless power transmission for non-invasive neurophysiological studies</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Custom Styles -->
-        <style>
-            .research-grid {
-                display: grid;
-                gap: 2rem;
-            }
-
-            .research-area {
-                background: white;
-                border-radius: 12px;
-                overflow: hidden;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
-            }
-
-            .research-area:hover {
-                transform: translateY(-4px);
-                box-shadow: 0 8px 24px rgba(74, 20, 140, 0.15);
-            }
-
-            .area-header {
-                background: linear-gradient(135deg, #4A148C 0%, #7B1FA2 100%);
-                color: white;
-                padding: 1.5rem 2rem;
-                display: flex;
-                align-items: center;
-            }
-
-            .area-number {
-                font-size: 2.5rem;
-                font-weight: 700;
-                opacity: 0.3;
-                margin-right: 1.5rem;
-                font-family: 'Georgia', serif;
-            }
-
-            .area-title {
-                font-size: 1.5rem;
-                font-weight: 600;
-                margin: 0;
-            }
-
-            .area-content {
-                padding: 2rem;
-            }
-
-            .research-topic h4 {
-                color: #4A148C;
-                font-weight: 600;
-                margin-bottom: 1rem;
-                padding-left: 1rem;
-                border-left: 3px solid #D4AF37;
-            }
-
-            .research-list {
-                list-style: none;
-                padding: 0;
-            }
-
-            .research-list li {
-                margin-bottom: 1.5rem;
-                padding: 1rem;
-                background: #F5F3F0;
-                border-radius: 8px;
-            }
-
-            .research-subtitle {
-                color: #7B1FA2;
-                font-weight: 600;
-                display: block;
-                margin-bottom: 0.5rem;
-            }
-
-            .research-list p {
-                margin: 0;
-                color: #6C757D;
-                line-height: 1.6;
-            }
-
-            .research-subtopics {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                gap: 1.5rem;
-            }
-
-            .subtopic-card {
-                background: linear-gradient(135deg, #F5F3F0 0%, white 100%);
-                padding: 1.5rem;
-                border-radius: 8px;
-                border-left: 3px solid #D4AF37;
-            }
-
-            .subtopic-card h4 {
-                color: #4A148C;
-                font-size: 1.1rem;
-                margin-bottom: 1rem;
-            }
-
-            .subtopic-card h4 i {
-                color: #D4AF37;
-                margin-right: 0.5rem;
-            }
-
-            .subtopic-card ul {
-                list-style: none;
-                padding: 0;
-            }
-
-            .subtopic-card ul li {
-                padding: 0.5rem 0;
-                color: #6C757D;
-                border-bottom: 1px solid rgba(0,0,0,0.05);
-            }
-
-            .subtopic-card ul li:last-child {
-                border-bottom: none;
-            }
-
-            .application-cards {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                gap: 1.5rem;
-                margin-top: 1rem;
-            }
-
-            .app-card {
-                background: linear-gradient(135deg, white 0%, #F5F3F0 100%);
-                padding: 1.5rem;
-                border-radius: 8px;
-                text-align: center;
-                border: 2px solid transparent;
-                transition: all 0.3s ease;
-            }
-
-            .app-card:hover {
-                border-color: #D4AF37;
-                background: white;
-            }
-
-            .app-card i {
-                font-size: 2.5rem;
-                color: #7B1FA2;
-                margin-bottom: 1rem;
-            }
-
-            .app-card h5 {
-                color: #4A148C;
-                font-weight: 600;
-                margin-bottom: 0.5rem;
-            }
-
-            .app-card p {
-                color: #6C757D;
-                font-size: 0.95rem;
-                margin: 0;
-            }
-
-            @media (max-width: 768px) {
-                .area-header {
-                    flex-direction: column;
-                    text-align: center;
-                }
-                
-                .area-number {
-                    margin-right: 0;
-                    margin-bottom: 0.5rem;
-                }
-            }
-        </style>
-    </div>
-</section>
+    </section>
+</body>
+</html>
+```
