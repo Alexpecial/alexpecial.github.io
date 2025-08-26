@@ -61,25 +61,48 @@ permalink: /photo.html
       font-size: 1.1rem;
     }
 
-    /* 타일 그리드 */
+    /* 타일 그리드 - 명확한 반응형 브레이크포인트 */
     .photo-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 20px;
       animation: fadeInUp 0.6s ease-out;
     }
 
-    @media (max-width: 768px) {
+    /* 초대형 화면: 5열 (1600px 이상) */
+    @media (min-width: 1600px) {
       .photo-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+
+    /* 대형 화면: 4열 (1200px - 1599px) */
+    @media (min-width: 1200px) and (max-width: 1599px) {
+      .photo-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    /* 중형 화면: 3열 (768px - 1199px) */
+    @media (min-width: 768px) and (max-width: 1199px) {
+      .photo-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+      }
+    }
+
+    /* 소형 태블릿: 2열 (576px - 767px) */
+    @media (min-width: 576px) and (max-width: 767px) {
+      .photo-grid {
+        grid-template-columns: repeat(2, 1fr);
         gap: 15px;
       }
     }
 
-    @media (max-width: 480px) {
+    /* 모바일: 1열 (575px 이하) */
+    @media (max-width: 575px) {
       .photo-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10oja;
+        grid-template-columns: 1fr;
+        gap: 12px;
       }
     }
 
@@ -134,7 +157,6 @@ permalink: /photo.html
       background: rgba(0, 0, 0, 0.95);
       z-index: 9999;
       cursor: pointer;
-      animation: fadeIn 0.3s ease;
     }
 
     .modal-overlay.active {
@@ -142,24 +164,33 @@ permalink: /photo.html
       justify-content: center;
       align-items: center;
       padding: 20px;
+      animation: fadeIn 0.3s ease;
     }
 
-    /* 모달 컨텐츠 */
+    /* 모달 컨텐츠 - 중앙 정렬 보장 */
     .modal-content-wrapper {
       position: relative;
+      width: auto;
+      height: auto;
       max-width: 90vw;
       max-height: 90vh;
       display: flex;
       flex-direction: column;
+      justify-content: center;
+      align-items: center;
       animation: zoomIn 0.3s ease;
     }
 
     .modal-image {
+      display: block;
+      width: auto;
+      height: auto;
       max-width: 100%;
-      max-height: calc(90vh - 60px);
+      max-height: calc(90vh - 80px);
       object-fit: contain;
       border-radius: 8px;
       box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+      margin: 0 auto;
     }
 
     .modal-caption {
@@ -268,12 +299,21 @@ permalink: /photo.html
 
     /* 반응형 조정 */
     @media (max-width: 768px) {
+      .gallery-container {
+        padding: 15px;
+      }
+      
       .gallery-header h1 {
-        font-size: 2rem;
+        font-size: 1.8rem;
+      }
+      
+      .gallery-header p {
+        font-size: 1rem;
       }
       
       .modal-caption {
         font-size: 0.9rem;
+        padding: 8px 15px;
       }
       
       .back-home {
@@ -281,6 +321,29 @@ permalink: /photo.html
         right: 20px;
         padding: 12px 20px;
         font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 575px) {
+      body {
+        padding: 10px;
+      }
+      
+      .gallery-container {
+        padding: 10px;
+        border-radius: 15px;
+      }
+      
+      .gallery-header {
+        margin-bottom: 25px;
+      }
+      
+      .gallery-header h1 {
+        font-size: 1.5rem;
+      }
+      
+      .photo-tile {
+        border-radius: 8px;
       }
     }
   </style>
@@ -398,20 +461,34 @@ permalink: /photo.html
         modalCaption.textContent = '';
       }
 
-      // 이미지 크기 조정
+      // 이미지 크기 조정 - 중앙 정렬 보장
       function adjustModalImageSize() {
-        const maxWidth = window.innerWidth * 0.9;
-        const maxHeight = window.innerHeight * 0.9 - 60; // 캡션 공간 확보
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const maxWidth = viewportWidth * 0.9;
+        const maxHeight = viewportHeight * 0.85; // 캡션 공간 확보
         
         const imgWidth = modalImage.naturalWidth;
         const imgHeight = modalImage.naturalHeight;
         
-        const widthRatio = maxWidth / imgWidth;
-        const heightRatio = maxHeight / imgHeight;
-        const ratio = Math.min(widthRatio, heightRatio, 1); // 원본보다 크게 확대하지 않음
-        
-        modalImage.style.maxWidth = `${imgWidth * ratio}px`;
-        modalImage.style.maxHeight = `${imgHeight * ratio}px`;
+        // 이미지가 뷰포트보다 작으면 원본 크기 유지
+        if (imgWidth <= maxWidth && imgHeight <= maxHeight) {
+          modalImage.style.width = 'auto';
+          modalImage.style.height = 'auto';
+          modalImage.style.maxWidth = '100%';
+          modalImage.style.maxHeight = `${maxHeight}px`;
+        } else {
+          // 비율 계산
+          const widthRatio = maxWidth / imgWidth;
+          const heightRatio = maxHeight / imgHeight;
+          const ratio = Math.min(widthRatio, heightRatio);
+          
+          // 크기 적용
+          modalImage.style.width = `${imgWidth * ratio}px`;
+          modalImage.style.height = `${imgHeight * ratio}px`;
+          modalImage.style.maxWidth = '100%';
+          modalImage.style.maxHeight = `${maxHeight}px`;
+        }
       }
 
       // 윈도우 리사이즈 시 모달 이미지 크기 재조정

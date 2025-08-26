@@ -1,5 +1,5 @@
 /*!
- * Start Bootstrap - Creative Bootstrap Theme
+ * Start Bootstrap - Creative Bootstrap Theme (http://startbootstrap.com)
  * Code licensed under the Apache License v2.0.
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
@@ -44,8 +44,5 @@
 
     // Initialize WOW.js Scrolling Animations
     new WOW().init();
-
-    // --- Removed photo.html-specific Masonry & click handlers to avoid double init ---
-    // Photo page now handles its own grid initialization and modal logic.
 
 })(jQuery); // End of use strict
