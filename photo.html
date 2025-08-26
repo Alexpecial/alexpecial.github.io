@@ -6,8 +6,6 @@ permalink: /photo.html
 {% include head.html %}
 
 <body id="page-top" class="photo-page">
-  
-
   <section id="photos" class="content-section bg-light">
     <div class="container">
       <div class="photo-grid" aria-live="polite">
@@ -38,9 +36,9 @@ permalink: /photo.html
     </div>
   </section>
 
-  <!-- 확대 보기 (모달) - 순수 이미지 표시 -->
+  <!-- Pure image modal -->
   <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog" role="document">
       <div class="modal-content no-header">
         <div class="modal-body d-flex align-items-center justify-content-center p-0">
           <figure class="modal-figure m-0">
@@ -54,14 +52,11 @@ permalink: /photo.html
 
   {% include scripts.html %}
 
-  <!-- Masonry & imagesLoaded -->
   <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/imagesloaded@4.1.4/imagesloaded.pkgd.min.js"></script>
 
   <style>
-    /* 페이지 테마 */
-
-    /* Force-hide any global navbar on this page */
+    /* Hide any global navbar on this page */
     body.photo-page .navbar,
     body.photo-page nav.navbar,
     body.photo-page header.navbar,
@@ -75,15 +70,15 @@ permalink: /photo.html
     }
     .photo-grid { margin: 0 auto; }
 
-    /* 정사각형 타일 (배경/그림자 제거, 잘림 방지 위해 확대/애니메이션 제거) */
+    /* Square tiles with no background/shadow; no hover zoom to avoid clipping */
     .photo-item {
       width: 31%;
       aspect-ratio: 1 / 1;
       margin-bottom: 12px;
       border-radius: 16px;
-      overflow: hidden;           /* 둥근 모서리만 유지 */
-      background: transparent;    /* 배경 제거 */
-      box-shadow: none;           /* 그림자 제거 */
+      overflow: hidden;
+      background: transparent;
+      box-shadow: none;
       position: relative;
       cursor: zoom-in;
       transform: translateZ(0);
@@ -91,7 +86,7 @@ permalink: /photo.html
     @media (max-width: 992px) { .photo-item { width: 48%; } }
     @media (max-width: 576px) { .photo-item { width: 100%; } }
 
-    /* 로딩 시 스켈레톤만 표시, 배경 박스 느낌 제거 */
+    /* Lightweight skeleton loader */
     .photo-item::before {
       content: "";
       position: absolute; inset: 0;
@@ -102,45 +97,38 @@ permalink: /photo.html
     @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
     .photo-item img.photo-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      opacity: 0;                 /* 로딩 전 투명 */
-      transition: opacity .25s ease;
-      transform: none !important; /* 확대/이동 제거 */
-      animation: none !important; /* Ken Burns 제거 */
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      opacity: 0; transition: opacity .25s ease;
+      transform: none !important; animation: none !important;
     }
     .photo-item.is-loaded::before { display: none; }
     .photo-item.is-loaded img.photo-img { opacity: 1; }
 
-    /* 모달: 순수 사진만 (검은 라인/배경 제거) */
-
-    /* Force viewport-centered modal dialog */
-    #photoModal .modal-dialog {
+    /* --- Robust viewport-centered modal --- */
+    /* Keep Bootstrap backdrop, but center the dialog ourselves */
+    #photoModal .modal-dialog{
       position: fixed;
       left: 50%; top: 50%;
       transform: translate(-50%, -50%);
       margin: 0;
       width: auto;
       max-width: calc(100vw - 2rem);
-      z-index: 1055; /* above backdrop */
+      z-index: 1055;
+      will-change: transform;
     }
+    #photoModal { z-index: 1050; } /* backdrop 1040 */
     #photoModal.show { display: block; }
 
-    #photoModal .modal-dialog { width:auto; max-width:100vw; margin:0 auto; }
+    /* Pure content, no borders/backgrounds */
     #photoModal .modal-content.no-header {
-      max-height: 100vh;
-      display:flex; flex-direction:column; align-items:center;
-      background: transparent;    /* 배경 제거 */
-      box-shadow: none;           /* 그림자 제거 */
-      border: 0; border-radius: 0;/* 테두리/라운드 제거 */
+      background: transparent; box-shadow: none; border: 0; border-radius: 0;
+      max-height: 100vh; display: flex; flex-direction: column; align-items: center;
     }
-    #photoModal .modal-body { padding:0; overflow:hidden; width:100%; height:100%; background: transparent; }
-    #photoModal .modal-figure { position:relative; max-width:100%; max-height:100%; background: transparent; }
-    #photoModal .modal-img { display:block; max-width:100%; height:auto; }
+    #photoModal .modal-body { padding: 0; overflow: hidden; width: 100%; height: 100%; }
+    #photoModal .modal-figure { position: relative; max-width: 100%; max-height: 100%; }
+    #photoModal .modal-img { display: block; max-width: 100%; height: auto; }
 
-    /* 캡션은 필요 시에만 보이도록 기본 최소화(이전 요구 유지) */
+    /* Caption (minimal) */
     #photoModal .modal-caption {
       position:absolute; left:0; right:0; bottom:0;
       padding:.55rem .85rem; color:#fff;
@@ -149,7 +137,7 @@ permalink: /photo.html
       max-height:30%; overflow:hidden; text-overflow:ellipsis;
     }
 
-    /* 모달 등장 애니메이션(부드러운 페이드/스케일) */
+    /* Open/close animation */
     #photoModal .modal-content { opacity:0; transform:scale(.98); transition:opacity .18s ease, transform .18s ease; }
     #photoModal.show .modal-content { opacity:1; transform:scale(1); }
     @media (prefers-reduced-motion: reduce) {
@@ -162,12 +150,12 @@ permalink: /photo.html
       $(function () {
         var $grid = $('.photo-grid');
 
-        // Masonry
+        /* Masonry */
         $grid.imagesLoaded(function () {
           $grid.masonry({ itemSelector: '.photo-item', percentPosition: true, gutter: 12 });
         });
 
-        // 타일 로딩: 스켈레톤 -> 페이드인, 에러 시 원본 폴백
+        /* Tile loading: skeleton -> fade-in, error fallback */
         document.querySelectorAll('.photo-item img.photo-img').forEach(function(img){
           var item = img.closest('.photo-item');
           function markLoaded(){ item && item.classList.add('is-loaded'); }
@@ -180,17 +168,23 @@ permalink: /photo.html
           }, { once:true });
         });
 
-        // 모달 중앙 표시 + "울렁" 없이 표시
+        /* Modal logic */
         var $modal = $('#photoModal');
+        var $dialog = $modal.find('.modal-dialog');
         var $modalImg = $modal.find('.modal-img');
         var $modalCaption = $modal.find('.modal-caption');
 
         function computeFit(nw, nh){
           var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
           var vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-          var maxW = vw - 32; var maxH = vh - 32;
+          var maxW = vw - 32, maxH = vh - 32;
           var scale = Math.min(1, maxW / nw, maxH / nh);
           return Math.floor(nw * scale);
+        }
+
+        function centerDialog(){
+          // No-op: fixed + translate handles centering; but ensure max-width respects viewport
+          $dialog.css('max-width', 'calc(100vw - 2rem)');
         }
 
         function openModalWithFit(src, caption){
@@ -199,20 +193,41 @@ permalink: /photo.html
             var targetW = computeFit(preload.naturalWidth, preload.naturalHeight);
             $modalImg.css({ width: targetW + 'px' }).attr('src', src);
             $modalCaption.text(caption || '');
-            $modal.modal('show');
+
+            // Append to body to avoid any transformed ancestor affecting fixed positioning
+            if ($modal.parent()[0] !== document.body) { $modal.appendTo(document.body); }
+
+            if (typeof $modal.modal === 'function') {
+              $modal.one('shown.bs.modal', centerDialog).modal('show');
+            } else {
+              // Fallback if Bootstrap JS is unavailable
+              $modal.addClass('show').attr('aria-modal','true').css('display','block');
+              centerDialog();
+            }
           };
-          preload.onerror = function(){ $modalImg.attr('src', src); $modalCaption.text(caption||''); $modal.modal('show'); };
+          preload.onerror = function(){
+            if (typeof $modal.modal === 'function') { $modal.modal('show'); } else { $modal.addClass('show').css('display','block'); }
+            $modalImg.attr('src', src); $modalCaption.text(caption||'');
+            centerDialog();
+          };
           preload.src = src;
         }
 
-        // 썸네일 클릭으로 오픈 (좌우 이동 기능은 제거)
+        // Open on tile click/Enter/Space
         $grid.on('click keydown', '.photo-item', function (e) {
           if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
           openModalWithFit(this.dataset.full, this.dataset.caption || '');
         });
 
-        // 바깥 클릭으로 닫기
-        $modal.on('click', '.modal-content, .modal-img', function(){ $modal.modal('hide'); });
+        // Close on click inside content or image
+        $modal.on('click', '.modal-content, .modal-img', function(){ 
+          if (typeof $modal.modal === 'function') { $modal.modal('hide'); }
+          else { $modal.removeClass('show').css('display','none'); }
+        });
+
+        // Recenter on resize/orientation changes
+        $(window).on('resize orientationchange', centerDialog);
+        if ('visualViewport' in window) window.visualViewport.addEventListener('resize', centerDialog, { passive:true });
       });
     })(jQuery);
   </script>
