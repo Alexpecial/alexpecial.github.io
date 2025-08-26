@@ -9,6 +9,7 @@ permalink: /photo.html
   <section id="photos" class="content-section bg-light">
     <div class="container">
       <div class="photo-grid" aria-live="polite">
+        <div class="grid-sizer"></div>
         {%- assign items = site.data.photos | default: empty -%}
         {%- for p in items -%}
           {%- assign base = p.base -%}
@@ -36,9 +37,9 @@ permalink: /photo.html
     </div>
   </section>
 
-  <!-- Pure image modal -->
+  <!-- Bootstrap default-centered modal (no custom positioning) -->
   <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content no-header">
         <div class="modal-body d-flex align-items-center justify-content-center p-0">
           <figure class="modal-figure m-0">
@@ -68,11 +69,15 @@ permalink: /photo.html
       background: linear-gradient(180deg, var(--warm-bg1), var(--warm-bg2));
       color: var(--text-strong);
     }
-    .photo-grid { margin: 0 auto; }
 
-    /* Square tiles with no background/shadow; no hover zoom to avoid clipping */
+    .photo-grid { margin: 0 auto; overflow: hidden; }
+    /* Exact column widths accounting for Masonry gutter (12px) */
+    .grid-sizer, .photo-item { width: calc((100% - 24px) / 3); } /* 3 cols, 2 gutters */
+    @media (max-width: 992px) { .grid-sizer, .photo-item { width: calc((100% - 12px) / 2); } } /* 2 cols, 1 gutter */
+    @media (max-width: 576px) { .grid-sizer, .photo-item { width: 100%; } } /* 1 col */
+
+    /* Square tiles; no background/shadow; no hover zoom/clip */
     .photo-item {
-      width: 31%;
       aspect-ratio: 1 / 1;
       margin-bottom: 12px;
       border-radius: 16px;
@@ -81,10 +86,9 @@ permalink: /photo.html
       box-shadow: none;
       position: relative;
       cursor: zoom-in;
+      box-sizing: border-box;
       transform: translateZ(0);
     }
-    @media (max-width: 992px) { .photo-item { width: 48%; } }
-    @media (max-width: 576px) { .photo-item { width: 100%; } }
 
     /* Lightweight skeleton loader */
     .photo-item::before {
@@ -97,29 +101,16 @@ permalink: /photo.html
     @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
     .photo-item img.photo-img {
-      width: 100%; height: 100%; object-fit: cover; display: block;
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
       opacity: 0; transition: opacity .25s ease;
       transform: none !important; animation: none !important;
+      will-change: opacity;
     }
     .photo-item.is-loaded::before { display: none; }
     .photo-item.is-loaded img.photo-img { opacity: 1; }
 
-    /* --- Robust viewport-centered modal --- */
-    /* Keep Bootstrap backdrop, but center the dialog ourselves */
-    #photoModal .modal-dialog{
-      position: fixed;
-      left: 50%; top: 50%;
-      transform: translate(-50%, -50%);
-      margin: 0;
-      width: auto;
-      max-width: calc(100vw - 2rem);
-      z-index: 1055;
-      will-change: transform;
-    }
-    #photoModal { z-index: 1050; } /* backdrop 1040 */
-    #photoModal.show { display: block; }
-
-    /* Pure content, no borders/backgrounds */
+    /* Pure content, no borders/backgrounds for modal */
     #photoModal .modal-content.no-header {
       background: transparent; box-shadow: none; border: 0; border-radius: 0;
       max-height: 100vh; display: flex; flex-direction: column; align-items: center;
@@ -137,7 +128,7 @@ permalink: /photo.html
       max-height:30%; overflow:hidden; text-overflow:ellipsis;
     }
 
-    /* Open/close animation */
+    /* Subtle open/close animation retained (not position-related) */
     #photoModal .modal-content { opacity:0; transform:scale(.98); transition:opacity .18s ease, transform .18s ease; }
     #photoModal.show .modal-content { opacity:1; transform:scale(1); }
     @media (prefers-reduced-motion: reduce) {
@@ -150,9 +141,14 @@ permalink: /photo.html
       $(function () {
         var $grid = $('.photo-grid');
 
-        /* Masonry */
+        /* Masonry with precise column sizing (no horizontal overflow) */
         $grid.imagesLoaded(function () {
-          $grid.masonry({ itemSelector: '.photo-item', percentPosition: true, gutter: 12 });
+          $grid.masonry({
+            itemSelector: '.photo-item',
+            columnWidth: '.grid-sizer',
+            gutter: 12,
+            percentPosition: true
+          });
         });
 
         /* Tile loading: skeleton -> fade-in, error fallback */
@@ -168,66 +164,23 @@ permalink: /photo.html
           }, { once:true });
         });
 
-        /* Modal logic */
+        /* Modal logic (default Bootstrap behavior; no custom positioning) */
         var $modal = $('#photoModal');
-        var $dialog = $modal.find('.modal-dialog');
         var $modalImg = $modal.find('.modal-img');
         var $modalCaption = $modal.find('.modal-caption');
 
-        function computeFit(nw, nh){
-          var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-          var vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-          var maxW = vw - 32, maxH = vh - 32;
-          var scale = Math.min(1, maxW / nw, maxH / nh);
-          return Math.floor(nw * scale);
-        }
-
-        function centerDialog(){
-          // No-op: fixed + translate handles centering; but ensure max-width respects viewport
-          $dialog.css('max-width', 'calc(100vw - 2rem)');
-        }
-
-        function openModalWithFit(src, caption){
-          var preload = new Image();
-          preload.onload = function(){
-            var targetW = computeFit(preload.naturalWidth, preload.naturalHeight);
-            $modalImg.css({ width: targetW + 'px' }).attr('src', src);
-            $modalCaption.text(caption || '');
-
-            // Append to body to avoid any transformed ancestor affecting fixed positioning
-            if ($modal.parent()[0] !== document.body) { $modal.appendTo(document.body); }
-
-            if (typeof $modal.modal === 'function') {
-              $modal.one('shown.bs.modal', centerDialog).modal('show');
-            } else {
-              // Fallback if Bootstrap JS is unavailable
-              $modal.addClass('show').attr('aria-modal','true').css('display','block');
-              centerDialog();
-            }
-          };
-          preload.onerror = function(){
-            if (typeof $modal.modal === 'function') { $modal.modal('show'); } else { $modal.addClass('show').css('display','block'); }
-            $modalImg.attr('src', src); $modalCaption.text(caption||'');
-            centerDialog();
-          };
-          preload.src = src;
-        }
-
-        // Open on tile click/Enter/Space
         $grid.on('click keydown', '.photo-item', function (e) {
           if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
-          openModalWithFit(this.dataset.full, this.dataset.caption || '');
+          $modalImg.attr('src', this.dataset.full);
+          $modalCaption.text(this.dataset.caption || '');
+          if (typeof $modal.modal === 'function') { $modal.modal('show'); }
+          else { $modal.addClass('show').css('display','block'); }
         });
 
-        // Close on click inside content or image
-        $modal.on('click', '.modal-content, .modal-img', function(){ 
+        $modal.on('click', '.modal-content, .modal-img', function(){
           if (typeof $modal.modal === 'function') { $modal.modal('hide'); }
           else { $modal.removeClass('show').css('display','none'); }
         });
-
-        // Recenter on resize/orientation changes
-        $(window).on('resize orientationchange', centerDialog);
-        if ('visualViewport' in window) window.visualViewport.addEventListener('resize', centerDialog, { passive:true });
       });
     })(jQuery);
   </script>
