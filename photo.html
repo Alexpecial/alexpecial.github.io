@@ -6,14 +6,10 @@ permalink: /photo.html
 {% include head.html %}
 
 <body id="page-top" class="photo-page">
-  <!-- {% include nav.html %} -->
+  
 
   <section id="photos" class="content-section bg-light">
     <div class="container">
-      <div class="content-section-heading text-center">
-        <h2 class="mb-5">Family Memories</h2>
-      </div>
-
       <div class="photo-grid" aria-live="polite">
         {%- assign items = site.data.photos | default: empty -%}
         {%- for p in items -%}
@@ -64,6 +60,13 @@ permalink: /photo.html
 
   <style>
     /* 페이지 테마 */
+
+    /* Force-hide any global navbar on this page */
+    body.photo-page .navbar,
+    body.photo-page nav.navbar,
+    body.photo-page header.navbar,
+    body.photo-page .site-nav { display: none !important; }
+
     body.photo-page {
       --warm-bg1:#fff7f0; --warm-bg2:#ffe9d6;
       --text-strong:#3b2a22;
@@ -112,6 +115,19 @@ permalink: /photo.html
     .photo-item.is-loaded img.photo-img { opacity: 1; }
 
     /* 모달: 순수 사진만 (검은 라인/배경 제거) */
+
+    /* Force viewport-centered modal dialog */
+    #photoModal .modal-dialog {
+      position: fixed;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0;
+      width: auto;
+      max-width: calc(100vw - 2rem);
+      z-index: 1055; /* above backdrop */
+    }
+    #photoModal.show { display: block; }
+
     #photoModal .modal-dialog { width:auto; max-width:100vw; margin:0 auto; }
     #photoModal .modal-content.no-header {
       max-height: 100vh;
