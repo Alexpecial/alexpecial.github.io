@@ -5,7 +5,7 @@ permalink: /photo.html
 
 {% include head.html %}
 
-<body id="page-top">
+<body id="page-top" class="photo-page">
   {% include nav.html %}
 
   <section id="photos" class="content-section bg-light">
@@ -27,8 +27,7 @@ permalink: /photo.html
                role="button"
                aria-label="Open photo"
                data-full="{{ base | relative_url }}"
-               data-caption="{{ caption | escape }}"
-               style="aspect-ratio: 3 / 2;">
+               data-caption="{{ caption | escape }}">
             <img class="photo-img"
                  loading="lazy"
                  decoding="async"
@@ -64,19 +63,42 @@ permalink: /photo.html
   <script src="https://cdn.jsdelivr.net/npm/imagesloaded@4.1.4/imagesloaded.pkgd.min.js"></script>
 
   <style>
+    /* ===============  Warm theme (scoped to this page)  =============== */
+    body.photo-page {
+      --warm-bg1:#fff7f0; --warm-bg2:#ffe9d6; --warm-accent:#b25c2e;
+      --card-bg:#fffaf6; --card-shadow:0 8px 24px rgba(178,92,46,0.12);
+      --text-strong:#3b2a22; --text-soft:#6b5247;
+      background: linear-gradient(180deg, var(--warm-bg1), var(--warm-bg2));
+      color: var(--text-strong);
+    }
+    body.photo-page .content-section-heading h2 { color: var(--text-strong); letter-spacing:.2px; }
     .photo-grid { margin: 0 auto; }
+
+    /* 정사각형 타일 + 스켈레톤 로더 */
     .photo-item {
       width: 31%;
-      margin-bottom: 10px;
-      border-radius: 14px;
+      aspect-ratio: 1 / 1;
+      margin-bottom: 12px;
+      border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-      background: #fff;
+      box-shadow: var(--card-shadow);
+      background: var(--card-bg);
       position: relative;
       cursor: zoom-in;
+      transform: translateZ(0);
     }
     @media (max-width: 992px) { .photo-item { width: 48%; } }
     @media (max-width: 576px) { .photo-item { width: 100%; } }
+
+    /* Skeleton shimmer placeholder while image loads (prevents ? & pop-in) */
+    .photo-item::before {
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(255,255,255,0.2), rgba(255,255,255,0.5), rgba(255,255,255,0.2));
+      background-size: 200% 100%;
+      animation: shimmer 1.3s infinite;
+    }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
     .photo-item img.photo-img {
       width: 100%;
@@ -86,54 +108,34 @@ permalink: /photo.html
       animation: kenburns 14s ease-in-out infinite alternate;
       animation-play-state: paused;
       display: block;
+      opacity: 0;                 /* hide while loading to avoid broken icon flash */
+      transition: opacity .25s ease;
     }
+    .photo-item.is-loaded::before { display: none; }
+    .photo-item.is-loaded img.photo-img { opacity: 1; }
+
     @keyframes kenburns {
       0%   { transform: scale(1.02) translate3d(-1%, -1%, 0); }
       100% { transform: scale(1.05) translate3d( 1%,  1%, 0); }
     }
 
-    /* 모달 레이아웃: 헤더 제거 + 가운데 정렬 + 스크롤바 제거 */
-    #photoModal .modal-dialog {
-      width: auto;
-      max-width: 100vw;
-      margin: 1rem auto;     /* 좌우 auto로 중앙 정렬 */
-    }
+    /* Modal: centered, warm, no scrollbars next to image */
+    #photoModal .modal-dialog { width:auto; max-width:100vw; margin:1rem auto; }
     #photoModal .modal-content.no-header {
       max-height: calc(100vh - 2rem);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: #000;      /* 사진 몰입감 */
+      display:flex; flex-direction:column; align-items:center;
+      background:#000; border-radius:18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.3);
     }
-    #photoModal .modal-body {
-      padding: 0;            /* 여백 제거로 사진 영역 최대화 */
-      overflow: hidden;      /* 사진 옆 스크롤바 제거 */
-      width: 100%;
-      height: 100%;
-    }
-    #photoModal .modal-figure {
-      position: relative;
-      max-width: 100%;
-      max-height: 100%;
-    }
-    #photoModal .modal-img {
-      display: block;
-      max-width: 100%;
-      height: auto;
-      /* JS가 width를 px로 지정해 뷰포트에 맞춤 (업스케일 없음) */
-      touch-action: manipulation;
-    }
+    #photoModal .modal-body { padding:0; overflow:hidden; width:100%; height:100%; }
+    #photoModal .modal-figure { position:relative; max-width:100%; max-height:100%; }
+    #photoModal .modal-img { display:block; max-width:100%; height:auto; touch-action:manipulation; }
     #photoModal .modal-caption {
-      position: absolute;
-      left: 0; right: 0; bottom: 0;
-      padding: .5rem .75rem;
-      color: #fff;
-      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.55) 80%);
-      font-size: .95rem;
-      line-height: 1.3;
-      max-height: 30%;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      position:absolute; left:0; right:0; bottom:0;
+      padding:.55rem .85rem; color:#ffe9d6;
+      background:linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.55) 80%);
+      font-size:.95rem; line-height:1.35; letter-spacing:.1px;
+      max-height:34%; overflow:hidden; text-overflow:ellipsis;
     }
   </style>
 
@@ -142,88 +144,70 @@ permalink: /photo.html
       $(function () {
         var $grid = $('.photo-grid');
 
-        // Masonry 초기화
+        // Masonry once images have dimensions
         $grid.imagesLoaded(function () {
-          $grid.masonry({
-            itemSelector: '.photo-item',
-            percentPosition: true,
-            gutter: 10
-          });
+          $grid.masonry({ itemSelector: '.photo-item', percentPosition: true, gutter: 12 });
         });
 
-        // 타일 썸네일 오류 시 원본으로 폴백(물음표 방지)
-        document.querySelectorAll('img.photo-img').forEach(function(img){
+        // 1) TILE LOADING: remove '?' flash using skeleton + fade-in after onload
+        document.querySelectorAll('.photo-item img.photo-img').forEach(function(img){
+          var item = img.closest('.photo-item');
+          function markLoaded(){ item && item.classList.add('is-loaded'); }
+          if (img.complete && img.naturalWidth) { markLoaded(); }
+          else {
+            img.addEventListener('load', markLoaded, { once:true });
+          }
+          // Fallback on error: switch to full and then mark loaded
           img.addEventListener('error', function(){
-            var item = img.closest('.photo-item');
-            if (!item) return;
             var fallback = item.getAttribute('data-full');
             if (img.src !== fallback) {
               img.removeAttribute('srcset'); img.removeAttribute('sizes');
               img.src = fallback;
-            }
-          }, { once: true });
+            } else { markLoaded(); }
+          }, { once:true });
         });
 
-        // 유틸: 디바운스
+        // Utility: debounce
         function debounce(fn, delay){ var t; return function(){ clearTimeout(t); var a=arguments,s=this; t=setTimeout(function(){ fn.apply(s,a); }, delay); }; }
 
-        // 모달 관련
+        // Modal logic
         var $modal = $('#photoModal');
         var $modalImg = $modal.find('.modal-img');
         var $modalCaption = $modal.find('.modal-caption');
 
-        // 사전 프리로드 + 치수 계산 후 모달 표시(깜빡임 없음)
-        function openModalWithFit(src, caption){
-          var img = new Image();
-          img.onload = function(){
-            // 뷰포트 한계 내 최대화 (업스케일 금지)
-            var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-            var vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-            var outerMargin = 32; // dialog margin
-            var captionH = 56;    // 캡션 오버레이 예상 높이(표시여부와 내용에 따라 보수치)
-            var maxW = vw - outerMargin * 2;
-            var maxH = vh - outerMargin * 2 - captionH;
-
-            var nw = img.naturalWidth, nh = img.naturalHeight;
-            var scale = Math.min(1, maxW / nw, maxH / nh);
-            var targetW = Math.floor(nw * scale);
-
-            // 미리 사이즈 & 내용 주입
-            $modalImg.css({ width: targetW + 'px' });
-            $modalImg.attr('src', src);
-            $modalCaption.text(caption || '');
-
-            // 콘텐츠 폭을 이미지 폭에 맞춤
-            $modal.find('.modal-content').css('max-width', (targetW) + 'px');
-            $modal.modal('show');
-          };
-          img.onerror = function(){ $modalImg.attr('src', src); $modalCaption.text(caption||''); $modal.modal('show'); };
-          img.src = src;
-        }
-
-        // 모달 표시 후(정확한 캡션 높이 반영) 재피팅
-        function fitAfterShown(){
-          var img = $modalImg[0];
-          if (!img || !img.naturalWidth || !img.naturalHeight) return;
+        // 2) MODAL OPEN without rescale flicker: preload -> compute -> set -> show
+        function computeFit(nw, nh){
           var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
           var vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-          var outerMargin = 32;
-          var captionEl = $modal.find('.modal-caption')[0];
-          var captionH = captionEl ? captionEl.getBoundingClientRect().height : 0;
-
+          var outerMargin = 32;                 // dialog margin
           var maxW = vw - outerMargin * 2;
-          var maxH = vh - outerMargin * 2 - captionH;
-
-          var nw = img.naturalWidth, nh = img.naturalHeight;
+          var maxH = vh - outerMargin * 2;      // caption overlays image (absolute), so ignore its height
           var scale = Math.min(1, maxW / nw, maxH / nh);
-          var targetW = Math.floor(nw * scale);
-
-          $modalImg.css({ width: targetW + 'px' });
-          $modal.find('.modal-content').css('max-width', (targetW) + 'px');
+          return Math.floor(nw * scale);
         }
-        var fitAfterShownDebounced = debounce(fitAfterShown, 80);
 
-        // 타일 클릭/엔터로 모달 열기
+        function openModalWithFit(src, caption){
+          var preload = new Image();
+          preload.onload = function(){
+            var targetW = computeFit(preload.naturalWidth, preload.naturalHeight);
+            $modalImg.css({ width: targetW + 'px' }).attr('src', src);
+            $modalCaption.text(caption || '');
+            $modal.find('.modal-content').css('max-width', targetW + 'px');
+            $modal.modal('show'); // show after size set -> no "uleoreong"
+          };
+          preload.onerror = function(){ $modalImg.attr('src', src); $modalCaption.text(caption||''); $modal.modal('show'); };
+          preload.src = src;
+        }
+
+        // Resize handling (kept, but only when the user resizes)
+        var refit = debounce(function(){
+          var img = $modalImg[0]; if(!img || !img.naturalWidth) return;
+          var targetW = computeFit(img.naturalWidth, img.naturalHeight);
+          $modalImg.css({ width: targetW + 'px' });
+          $modal.find('.modal-content').css('max-width', targetW + 'px');
+        }, 120);
+
+        // Open handlers
         $grid.on('click keydown', '.photo-item', function (e) {
           if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
           var src = this.dataset.full;
@@ -231,19 +215,16 @@ permalink: /photo.html
           openModalWithFit(src, caption);
         });
 
-        // 모달가시 후 한번 더 정밀 피팅
-        $modal.on('shown.bs.modal', fitAfterShownDebounced);
-
-        // 창 크기/회전/가상키보드 대응
-        $(window).on('resize orientationchange', fitAfterShownDebounced);
-        if ('visualViewport' in window) {
-          window.visualViewport.addEventListener('resize', fitAfterShownDebounced, { passive: true });
-        }
-
-        // 사진을 클릭하면 모달 닫기
+        // Close on click (image or backdrop content)
         $modal.on('click', '.modal-img, .modal-content', function(){ $modal.modal('hide'); });
 
-        // 보이는 타일만 Ken Burns 실행
+        // Refit on viewport changes (no flicker since size is recomputed in-place)
+        $(window).on('resize orientationchange', refit);
+        if ('visualViewport' in window) {
+          window.visualViewport.addEventListener('resize', refit, { passive:true });
+        }
+
+        // Ken Burns only when visible
         if ('IntersectionObserver' in window) {
           var io = new IntersectionObserver(function(entries){
             entries.forEach(function(entry){
@@ -252,7 +233,6 @@ permalink: /photo.html
               img.style.animationPlayState = entry.isIntersecting ? 'running' : 'paused';
             });
           }, { rootMargin: '200px' });
-
           document.querySelectorAll('.photo-item').forEach(function(item){ io.observe(item); });
         }
       });
