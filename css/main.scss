@@ -151,3 +151,15 @@ body {
     color: $theme-gray;
     text-align: center;
 }
+
+/* 부트스트랩 네비 항목을 그대로 유지하되, 완전 투명 처리 */
+.navbar-nav > li > a.secret-link {
+  opacity: 0;             /* 보이진 않지만 클릭 가능 */
+  pointer-events: auto;    /* 명시(기본값이지만 안전) */
+}
+
+/* 호버/포커스 시에도 계속 투명하게 */
+.navbar-nav > li > a.secret-link:hover,
+.navbar-nav > li > a.secret-link:focus {
+  opacity: 0;
+}
