@@ -1,188 +1,426 @@
 ---
-title: "Photo Album"
+title: "Photo Gallery"
 permalink: /photo.html
 ---
 
-{% include head.html %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }}</title>
+  
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<body id="page-top" class="photo-page">
-  <section id="photos" class="content-section bg-light">
-    <div class="container">
-      <div class="photo-grid" aria-live="polite">
-        <div class="grid-sizer"></div>
-        {%- assign items = site.data.photos | default: empty -%}
-        {%- for p in items -%}
-          {%- assign base = p.base -%}
-          {%- assign caption = p.caption | default: '' -%}
-          {%- assign thumb800  = p.thumb800  | default: base | replace: '.jpg','_800.jpg'  | replace: '.jpeg','_800.jpeg' | replace: '.png','_800.png' -%}
-          {%- assign thumb1200 = p.thumb1200 | default: base | replace: '.jpg','_1200.jpg' | replace: '.jpeg','_1200.jpeg'| replace: '.png','_1200.png' -%}
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
 
-          <div class="photo-item"
-               tabindex="0"
-               role="button"
-               aria-label="Open photo"
-               data-full="{{ base | relative_url }}"
-               data-caption="{{ caption | escape }}">
-            <img class="photo-img"
-                 loading="lazy"
-                 decoding="async"
-                 fetchpriority="low"
-                 src="{{ thumb800   | relative_url }}"
-                 srcset="{{ thumb800 | relative_url }} 800w, {{ thumb1200 | relative_url }} 1200w"
-                 sizes="(min-width: 992px) 31vw, (min-width: 576px) 48vw, 100vw"
-                 alt="{{ caption | default: 'Family Photo' | escape }}">
-          </div>
-        {%- endfor -%}
-      </div>
+    /* 갤러리 컨테이너 */
+    .gallery-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .gallery-header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    .gallery-header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .gallery-header p {
+      color: #666;
+      font-size: 1.1rem;
+    }
+
+    /* 타일 그리드 */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    @media (max-width: 768px) {
+      .photo-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .photo-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10oja;
+      }
+    }
+
+    /* 개별 타일 */
+    .photo-tile {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      background: #f5f5f5;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .photo-tile:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .photo-tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .photo-tile:hover img {
+      transform: scale(1.1);
+    }
+
+    /* 로딩 스켈레톤 */
+    .photo-tile.loading {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+    }
+
+    @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* 모달 오버레이 */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      cursor: pointer;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* 모달 컨텐츠 */
+    .modal-content-wrapper {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      animation: zoomIn 0.3s ease;
+    }
+
+    .modal-image {
+      max-width: 100%;
+      max-height: calc(90vh - 60px);
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-caption {
+      color: white;
+      text-align: center;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 8px;
+      font-size: 1rem;
+      max-width: 100%;
+      word-wrap: break-word;
+      max-height: 100px;
+      overflow-y: auto;
+    }
+
+    .modal-caption::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .modal-caption::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+
+    .modal-caption::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 3px;
+    }
+
+    /* 닫기 버튼 */
+    .modal-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      color: white;
+      font-size: 2rem;
+      font-weight: 300;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      background: rgba(255, 255, 255, 0.1);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      transform: rotate(90deg);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* 애니메이션 */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes zoomIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* 홈으로 돌아가기 버튼 */
+    .back-home {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    .back-home:hover {
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+    }
+
+    /* 반응형 조정 */
+    @media (max-width: 768px) {
+      .gallery-header h1 {
+        font-size: 2rem;
+      }
+      
+      .modal-caption {
+        font-size: 0.9rem;
+      }
+      
+      .back-home {
+        bottom: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="gallery-container">
+    <div class="gallery-header">
+      <h1>Photo Gallery</h1>
+      <p>소중한 순간들을 담았습니다</p>
     </div>
-  </section>
-
-  <!-- Bootstrap default-centered modal (no custom positioning) -->
-  <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content no-header">
-        <div class="modal-body d-flex align-items-center justify-content-center p-0">
-          <figure class="modal-figure m-0">
-            <img class="modal-img" src="" alt="Enlarged Photo">
-            <figcaption class="modal-caption"></figcaption>
-          </figure>
+    
+    <div class="photo-grid" id="photoGrid">
+      {%- assign photos = site.data.photos | default: empty -%}
+      {%- for photo in photos -%}
+        {%- assign base_url = photo.base | relative_url -%}
+        {%- assign thumb800 = photo.thumb800 | default: photo.base | replace: '.jpg','_800.jpg' | replace: '.jpeg','_800.jpeg' | replace: '.png','_800.png' | relative_url -%}
+        {%- assign thumb1200 = photo.thumb1200 | default: photo.base | replace: '.jpg','_1200.jpg' | replace: '.jpeg','_1200.jpeg' | replace: '.png','_1200.png' | relative_url -%}
+        
+        <div class="photo-tile loading" 
+             data-full="{{ base_url }}"
+             data-caption="{{ photo.caption | escape }}">
+          <img src="{{ thumb800 }}"
+               srcset="{{ thumb800 }} 800w, {{ thumb1200 }} 1200w"
+               sizes="(max-width: 768px) 50vw, 33vw"
+               alt="{{ photo.caption | default: 'Gallery Photo' | escape }}"
+               loading="lazy">
         </div>
-      </div>
+      {%- endfor -%}
     </div>
   </div>
 
-  {% include scripts.html %}
+  <!-- 모달 오버레이 -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content-wrapper">
+      <span class="modal-close">&times;</span>
+      <img class="modal-image" id="modalImage" src="" alt="">
+      <div class="modal-caption" id="modalCaption"></div>
+    </div>
+  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/imagesloaded@4.1.4/imagesloaded.pkgd.min.js"></script>
-
-  <style>
-    /* Hide any global navbar on this page */
-    body.photo-page .navbar,
-    body.photo-page nav.navbar,
-    body.photo-page header.navbar,
-    body.photo-page .site-nav { display: none !important; }
-
-    body.photo-page {
-      --warm-bg1:#fff7f0; --warm-bg2:#ffe9d6;
-      --text-strong:#3b2a22;
-      background: linear-gradient(180deg, var(--warm-bg1), var(--warm-bg2));
-      color: var(--text-strong);
-    }
-
-    .photo-grid { margin: 0 auto; overflow: hidden; }
-    /* Exact column widths accounting for Masonry gutter (12px) */
-    .grid-sizer, .photo-item { width: calc((100% - 24px) / 3); } /* 3 cols, 2 gutters */
-    @media (max-width: 992px) { .grid-sizer, .photo-item { width: calc((100% - 12px) / 2); } } /* 2 cols, 1 gutter */
-    @media (max-width: 576px) { .grid-sizer, .photo-item { width: 100%; } } /* 1 col */
-
-    /* Square tiles; no background/shadow; no hover zoom/clip */
-    .photo-item {
-      aspect-ratio: 1 / 1;
-      margin-bottom: 12px;
-      border-radius: 16px;
-      overflow: hidden;
-      background: transparent;
-      box-shadow: none;
-      position: relative;
-      cursor: zoom-in;
-      box-sizing: border-box;
-      transform: translateZ(0);
-    }
-
-    /* Lightweight skeleton loader */
-    .photo-item::before {
-      content: "";
-      position: absolute; inset: 0;
-      background: linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.35), rgba(255,255,255,0.15));
-      background-size: 200% 100%;
-      animation: shimmer 1.2s infinite;
-    }
-    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-
-    .photo-item img.photo-img {
-      width: 100%; height: 100%;
-      object-fit: cover; display: block;
-      opacity: 0; transition: opacity .25s ease;
-      transform: none !important; animation: none !important;
-      will-change: opacity;
-    }
-    .photo-item.is-loaded::before { display: none; }
-    .photo-item.is-loaded img.photo-img { opacity: 1; }
-
-    /* Pure content, no borders/backgrounds for modal */
-    #photoModal .modal-content.no-header {
-      background: transparent; box-shadow: none; border: 0; border-radius: 0;
-      max-height: 100vh; display: flex; flex-direction: column; align-items: center;
-    }
-    #photoModal .modal-body { padding: 0; overflow: hidden; width: 100%; height: 100%; }
-    #photoModal .modal-figure { position: relative; max-width: 100%; max-height: 100%; }
-    #photoModal .modal-img { display: block; max-width: 100%; height: auto; }
-
-    /* Caption (minimal) */
-    #photoModal .modal-caption {
-      position:absolute; left:0; right:0; bottom:0;
-      padding:.55rem .85rem; color:#fff;
-      background:linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.45) 80%);
-      font-size:1rem; line-height:1.35; letter-spacing:.1px;
-      max-height:30%; overflow:hidden; text-overflow:ellipsis;
-    }
-
-    /* Subtle open/close animation retained (not position-related) */
-    #photoModal .modal-content { opacity:0; transform:scale(.98); transition:opacity .18s ease, transform .18s ease; }
-    #photoModal.show .modal-content { opacity:1; transform:scale(1); }
-    @media (prefers-reduced-motion: reduce) {
-      #photoModal .modal-content { transition:none; transform:none; opacity:1; }
-    }
-  </style>
+  <!-- 홈으로 돌아가기 -->
+  <a href="{{ '/' | relative_url }}" class="back-home">← Home</a>
 
   <script>
-    (function($){
-      $(function () {
-        var $grid = $('.photo-grid');
+    document.addEventListener('DOMContentLoaded', function() {
+      const photoTiles = document.querySelectorAll('.photo-tile');
+      const modalOverlay = document.getElementById('modalOverlay');
+      const modalImage = document.getElementById('modalImage');
+      const modalCaption = document.getElementById('modalCaption');
+      const modalClose = document.querySelector('.modal-close');
 
-        /* Masonry with precise column sizing (no horizontal overflow) */
-        $grid.imagesLoaded(function () {
-          $grid.masonry({
-            itemSelector: '.photo-item',
-            columnWidth: '.grid-sizer',
-            gutter: 12,
-            percentPosition: true
+      // 이미지 로드 완료 처리
+      photoTiles.forEach(tile => {
+        const img = tile.querySelector('img');
+        
+        // 이미지가 이미 로드되었거나 캐시된 경우
+        if (img.complete) {
+          tile.classList.remove('loading');
+        } else {
+          img.addEventListener('load', () => {
+            tile.classList.remove('loading');
           });
-        });
+        }
 
-        /* Tile loading: skeleton -> fade-in, error fallback */
-        document.querySelectorAll('.photo-item img.photo-img').forEach(function(img){
-          var item = img.closest('.photo-item');
-          function markLoaded(){ item && item.classList.add('is-loaded'); }
-          if (img.complete && img.naturalWidth) { markLoaded(); }
-          else { img.addEventListener('load', markLoaded, { once:true }); }
-          img.addEventListener('error', function(){
-            var fallback = item.getAttribute('data-full');
-            if (img.src !== fallback) { img.removeAttribute('srcset'); img.removeAttribute('sizes'); img.src = fallback; }
-            else { markLoaded(); }
-          }, { once:true });
-        });
-
-        /* Modal logic (default Bootstrap behavior; no custom positioning) */
-        var $modal = $('#photoModal');
-        var $modalImg = $modal.find('.modal-img');
-        var $modalCaption = $modal.find('.modal-caption');
-
-        $grid.on('click keydown', '.photo-item', function (e) {
-          if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
-          $modalImg.attr('src', this.dataset.full);
-          $modalCaption.text(this.dataset.caption || '');
-          if (typeof $modal.modal === 'function') { $modal.modal('show'); }
-          else { $modal.addClass('show').css('display','block'); }
-        });
-
-        $modal.on('click', '.modal-content, .modal-img', function(){
-          if (typeof $modal.modal === 'function') { $modal.modal('hide'); }
-          else { $modal.removeClass('show').css('display','none'); }
+        // 로드 실패 시 원본 이미지로 폴백
+        img.addEventListener('error', () => {
+          const fullImageUrl = tile.dataset.full;
+          if (img.src !== fullImageUrl) {
+            img.src = fullImageUrl;
+            img.removeAttribute('srcset');
+            img.removeAttribute('sizes');
+          }
+          tile.classList.remove('loading');
         });
       });
-    })(jQuery);
+
+      // 사진 클릭 이벤트
+      photoTiles.forEach(tile => {
+        tile.addEventListener('click', function() {
+          const fullImageUrl = this.dataset.full;
+          const caption = this.dataset.caption || '';
+          
+          modalImage.src = fullImageUrl;
+          modalCaption.textContent = caption;
+          modalOverlay.classList.add('active');
+          
+          // 모달 이미지 크기 최적화
+          modalImage.onload = function() {
+            adjustModalImageSize();
+          };
+        });
+      });
+
+      // 모달 닫기 - 오버레이 클릭
+      modalOverlay.addEventListener('click', function(e) {
+        if (e.target === modalOverlay || e.target === modalImage) {
+          closeModal();
+        }
+      });
+
+      // 모달 닫기 - X 버튼 클릭
+      modalClose.addEventListener('click', closeModal);
+
+      // ESC 키로 모달 닫기
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+          closeModal();
+        }
+      });
+
+      // 모달 닫기 함수
+      function closeModal() {
+        modalOverlay.classList.remove('active');
+        modalImage.src = '';
+        modalCaption.textContent = '';
+      }
+
+      // 이미지 크기 조정
+      function adjustModalImageSize() {
+        const maxWidth = window.innerWidth * 0.9;
+        const maxHeight = window.innerHeight * 0.9 - 60; // 캡션 공간 확보
+        
+        const imgWidth = modalImage.naturalWidth;
+        const imgHeight = modalImage.naturalHeight;
+        
+        const widthRatio = maxWidth / imgWidth;
+        const heightRatio = maxHeight / imgHeight;
+        const ratio = Math.min(widthRatio, heightRatio, 1); // 원본보다 크게 확대하지 않음
+        
+        modalImage.style.maxWidth = `${imgWidth * ratio}px`;
+        modalImage.style.maxHeight = `${imgHeight * ratio}px`;
+      }
+
+      // 윈도우 리사이즈 시 모달 이미지 크기 재조정
+      window.addEventListener('resize', function() {
+        if (modalOverlay.classList.contains('active')) {
+          adjustModalImageSize();
+        }
+      });
+    });
   </script>
 </body>
 </html>
