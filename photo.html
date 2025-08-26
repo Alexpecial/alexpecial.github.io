@@ -1,7 +1,11 @@
+---
+title: "Photo Album"
+permalink: /photo.html
+---
+
 {% include head.html %}
 
 <body id="page-top">
-
   {% include nav.html %}
 
   <section id="photos" class="content-section bg-light">
@@ -10,13 +14,14 @@
         <h3 class="text-secondary mb-0">Photo Album</h3>
         <h2 class="mb-5">Family Memories</h2>
       </div>
+
       <div class="photo-grid">
-        <!-- Photos will be dynamically added here via JS -->
+        <!-- JS가 여기로 카드를 주입 -->
       </div>
     </div>
   </section>
 
-  <!-- Bootstrap Modal for enlarged photo -->
+  <!-- 확대 보기 (모달) -->
   <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="photoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
@@ -28,7 +33,7 @@
         </div>
         <div class="modal-body text-center">
           <img class="modal-img" src="" alt="Enlarged Photo">
-          <p class="modal-caption"></p>
+          <p class="modal-caption mt-3 mb-0"></p>
         </div>
       </div>
     </div>
@@ -36,37 +41,98 @@
 
   {% include scripts.html %}
 
-  <!-- Add Masonry.js CDN -->
+  <!-- Masonry & imagesLoaded -->
   <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/imagesloaded@4.1.4/imagesloaded.pkgd.min.js"></script>
 
-  <!-- Script to generate photo tiles dynamically -->
+  <!-- 페이지 전용 스타일: Masonry 카드 + Ken Burns(다이내믹 팬) -->
+  <style>
+    .photo-grid {
+      /* Masonry가 위치를 계산하므로 margin만 관리 */
+      margin: 0 auto;
+    }
+    .photo-item {
+      width: 31%;
+      margin-bottom: 10px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+      background: #fff;
+      position: relative;
+      cursor: zoom-in;
+    }
+    @media (max-width: 992px) { .photo-item { width: 48%; } }
+    @media (max-width: 576px) { .photo-item { width: 100%; } }
+
+    .photo-item img {
+      display: block;
+      width: 100%;
+      height: auto;
+      transform-origin: center;
+      animation: kenburns 14s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+    /* hover 시 과도한 움직임 방지 + 멈춤 */
+    .photo-item:hover img {
+      animation-play-state: paused;
+    }
+    /* iPhone Photos 느낌의 부드러운 팬/줌 */
+    @keyframes kenburns {
+      0%   { transform: scale(1.05) translate3d(-1.5%, -1.5%, 0); }
+      100% { transform: scale(1.12) translate3d( 1.5%,  1.5%, 0); }
+    }
+
+    /* 모달 이미지는 애니메이션 없이 크게 */
+    .modal-img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+  </style>
+
+  <!-- 사진 주입 + Masonry 초기화 + 모달 핸들러 -->
   <script>
-    $(document).ready(function() {
-      // Add your photos here: src and caption
+    $(function () {
+      // 1) 사진 목록 (원하실 때 계속 추가)
       var photos = [
         { src: 'img/fam/photo1.jpg', caption: '이 사진은 가족 여행 중 찍은 거예요. 행복한 추억입니다.' },
         { src: 'img/fam/photo2.jpg', caption: '아이들이 웃는 모습이 제일 좋아요. 매일 감사합니다.' },
         { src: 'img/fam/photo3.jpg', caption: '함께한 저녁 식사. 소중한 시간이었어요.' },
-        // Add more photos like this: { src: 'img/fam/yourfile.jpg', caption: 'Your short letter here' }
+        // 예: { src: 'img/fam/yourfile.jpg', caption: '여기에 짧은 설명' }
       ];
 
-      // Dynamically create photo items
-      photos.forEach(function(photo) {
-        var item = $('<div class="photo-item" data-src="' + photo.src + '" data-caption="' + photo.caption + '"><img src="' + photo.src + '" alt="Family Photo"></div>');
-        $('.photo-grid').append(item);
+      // 2) 카드 DOM 생성
+      var $grid = $('.photo-grid');
+      photos.forEach(function (p) {
+        var $item = $(
+          '<div class="photo-item" tabindex="0" role="button" aria-label="Open photo">' +
+            '<img loading="lazy" src="' + p.src + '" alt="Family Photo">' +
+          '</div>'
+        );
+        $item.data('src', p.src).data('caption', p.caption);
+        $grid.append($item);
       });
 
-      // Initialize Masonry after adding items
-      $('.photo-grid').imagesLoaded(function() {
-        $('.photo-grid').masonry({
+      // 3) 이미지 로딩 후 Masonry 레이아웃
+      $grid.imagesLoaded(function () {
+        $grid.masonry({
           itemSelector: '.photo-item',
           percentPosition: true,
           gutter: 10
         });
       });
+
+      // 4) 클릭/엔터로 모달 열기
+      $grid.on('click keydown', '.photo-item', function (e) {
+        if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+        var src = $(this).data('src');
+        var caption = $(this).data('caption') || '';
+        $('.modal-img').attr('src', src);
+        $('.modal-caption').text(caption);
+        $('#photoModal').modal('show');
+      });
     });
   </script>
-
 </body>
 </html>
