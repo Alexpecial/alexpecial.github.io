@@ -8,7 +8,7 @@ permalink: /photo.html
 <body id="page-top" class="photo-page" oncontextmenu="return false;">
   {# nav intentionally omitted on this page #}
 
-  <section id="photos" class="content-section bg-light">
+  <section id="photos" class="content-section">
     <div class="container">
       <div class="content-section-heading text-center">
         <h2 class="mb-5">Family Memories</h2>
@@ -52,6 +52,11 @@ permalink: /photo.html
             <div class="zoom-viewport">
               <img class="modal-img" src="" alt="Enlarged Photo" draggable="false">
             </div>
+            <div class="modal-controls" aria-hidden="false">
+              <button type="button" class="nav-btn prev" aria-label="이전 사진">〈 이전</button>
+              <span class="divider">·</span>
+              <button type="button" class="nav-btn next" aria-label="다음 사진">다음 〉</button>
+            </div>
             <figcaption class="modal-caption" role="note" aria-live="polite">
               <span class="caption-text"></span>
               <button type="button" class="caption-toggle" aria-expanded="false">더보기</button>
@@ -71,10 +76,10 @@ permalink: /photo.html
     html, body.photo-page { max-width:100%; overflow-x:hidden; }
     .container { max-width: min(1100px, 100%); padding: 0 12px; }
 
+    /* Warm theme (scoped) */
     body.photo-page {
-      --warm-bg1:#fff7f0; --warm-bg2:#ffe9d6; --warm-accent:#b25c2e;
-      --card-bg:#fffaf6; --card-shadow:0 8px 24px rgba(178,92,46,0.12);
-      --text-strong:#3b2a22; --text-soft:#6b5247;
+      --warm-bg1:#fff7f0; --warm-bg2:#ffe9d6;
+      --text-strong:#3b2a22;
       background: linear-gradient(180deg, var(--warm-bg1), var(--warm-bg2));
       color: var(--text-strong);
       -webkit-user-select:none; user-select:none; -webkit-touch-callout:none;
@@ -82,19 +87,36 @@ permalink: /photo.html
     }
     .photo-grid { margin:0 auto; padding:0 4px; overflow:hidden; }
 
+    /* Square tiles; remove darker card bg & shadow */
     .photo-item {
-      width:31%; aspect-ratio:1/1; margin-bottom:12px; border-radius:16px; overflow:hidden;
-      box-shadow:var(--card-shadow); background:var(--card-bg); position:relative; cursor:zoom-in; transform:translateZ(0); box-sizing:border-box;
+      width:31%; aspect-ratio:1/1; margin-bottom:12px;
+      border-radius:16px;
+      overflow:hidden;           /* keep rounded corners */
+      background: transparent;   /* remove card background */
+      box-shadow: none;          /* remove shadow halo */
+      position:relative; cursor:zoom-in; transform:translateZ(0); box-sizing:border-box;
     }
     @media (max-width: 992px) { .photo-item { width:48%; } }
     @media (max-width: 576px) { .photo-item { width:100%; } }
 
-    .photo-item::before{ content:""; position:absolute; inset:0; background:linear-gradient(90deg, rgba(255,255,255,.2), rgba(255,255,255,.5), rgba(255,255,255,.2)); background-size:200% 100%; animation:shimmer 1.3s infinite; }
+    /* Skeleton loader only (no tinted bg) */
+    .photo-item::before{
+      content:""; position:absolute; inset:0;
+      background: linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.35), rgba(255,255,255,0.15));
+      background-size:200% 100%; animation:shimmer 1.2s infinite;
+    }
     @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-    .photo-item img.photo-img{ width:100%; height:100%; object-fit:cover; transform-origin:center; animation:kenburns 14s ease-in-out infinite alternate; animation-play-state:paused; display:block; opacity:0; transition:opacity .25s ease; -webkit-user-drag:none; pointer-events:none; }
-    .photo-item.is-loaded::before{ display:none; } .photo-item.is-loaded img.photo-img{ opacity:1; pointer-events:auto; }
-    @keyframes kenburns{0%{transform:scale(1.02) translate3d(-1%,-1%,0);}100%{transform:scale(1.05) translate3d(1%,1%,0);}}
+    .photo-item img.photo-img{
+      width:100%; height:100%; object-fit:cover;
+      display:block; opacity:0; transition:opacity .25s ease;
+      -webkit-user-drag:none; pointer-events:none;
+      /* disable any zoom/motion to avoid clipping */
+      animation: none !important;
+      transform:none !important;
+    }
+    .photo-item.is-loaded::before{ display:none; }
+    .photo-item.is-loaded img.photo-img{ opacity:1; pointer-events:auto; }
 
     /* Modal */
     #photoModal .modal-dialog{ width:auto; max-width:100vw; margin:1rem auto; }
@@ -102,12 +124,33 @@ permalink: /photo.html
     #photoModal .modal-body{ padding:0; overflow:hidden; width:100%; height:100%; }
     #photoModal .modal-figure{ position:relative; max-width:100%; max-height:100%; margin:0 auto; }
 
-    .zoom-viewport{ position:relative; max-width:100%; max-height:100%; overflow:hidden; touch-action:none; /* allow custom gestures */ }
-    .modal-img{ display:block; max-width:100%; height:auto; margin:0 auto; transform-origin:center center; /* will be transformed for zoom/pan */ }
+    .zoom-viewport{ position:relative; max-width:100%; max-height:100%; overflow:hidden; touch-action:none; }
+    .modal-img{ display:block; max-width:100%; height:auto; margin:0 auto; transform-origin:center center; }
 
-    .modal-caption{ position:absolute; left:0; right:0; bottom:0; padding:.7rem 1rem .9rem; color:#ffe9d6; background:linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.55) 80%); font-size:1.075rem; line-height:1.45; letter-spacing:.1px; max-height:34%; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
-    .modal-caption.expanded{ max-height:none; -webkit-line-clamp:initial; overflow:auto; background:linear-gradient(180deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,.7) 100%); }
-    .caption-toggle{ position:absolute; right:.75rem; bottom:.5rem; background:rgba(0,0,0,.35); color:#ffe9d6; border:1px solid rgba(255,255,255,.35); font-size:.85rem; padding:.2rem .5rem; border-radius:10px; cursor:pointer; }
+    /* Bottom controls (prev/next) */
+    .modal-controls{
+      position:absolute; left:50%; transform:translateX(-50%);
+      bottom: calc(0.9rem + 44px);  /* above caption */
+      display:flex; align-items:center; gap:.5rem;
+      background: rgba(0,0,0,.35); padding:.25rem .6rem; border-radius: 999px;
+    }
+    .modal-controls .nav-btn{
+      border:1px solid rgba(255,255,255,.45);
+      background: transparent; color:#ffe9d6;
+      font-size:.95rem; line-height:1; padding:.3rem .6rem;
+      border-radius: 999px; cursor:pointer;
+    }
+    .modal-controls .divider{ color:#ffe9d6; opacity:.65; }
+
+    /* Caption */
+    .modal-caption{ position:absolute; left:0; right:0; bottom:0; padding:.7rem 1rem .9rem; color:#ffe9d6;
+      background:linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.55) 80%);
+      font-size:1.075rem; line-height:1.45; letter-spacing:.1px; max-height:34%;
+      display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+    .modal-caption.expanded{ max-height:none; -webkit-line-clamp:initial; overflow:auto;
+      background:linear-gradient(180deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,.7) 100%); }
+    .caption-toggle{ position:absolute; right:.75rem; bottom:.5rem; background:rgba(0,0,0,.35); color:#ffe9d6;
+      border:1px solid rgba(255,255,255,.35); font-size:.85rem; padding:.2rem .5rem; border-radius:10px; cursor:pointer; }
   </style>
 
   <script>
@@ -119,7 +162,7 @@ permalink: /photo.html
           if ((e.ctrlKey || e.metaKey) && ['s','S','p','P'].includes(e.key)) e.preventDefault();
         });
 
-        // Build list of photos for swipe nav
+        // Build list of photos for button nav
         var tiles = Array.prototype.slice.call(document.querySelectorAll('.photo-item'));
         var photos = tiles.map(function(t){ return { src: t.dataset.full, caption: t.dataset.caption || '' }; });
 
@@ -144,7 +187,6 @@ permalink: /photo.html
         var $modalCaption = $modal.find('.modal-caption');
         var $captionText = $modal.find('.caption-text');
         var $captionToggle = $modal.find('.caption-toggle');
-        var viewport = document.querySelector('.zoom-viewport');
 
         // Fit computation
         function computeFit(nw, nh){
@@ -165,7 +207,6 @@ permalink: /photo.html
           var item = photos[idx];
           var preload = new Image();
           preload.onload = function(){
-            resetZoomState(); // reset zoom before sizing
             var targetW = computeFit(preload.naturalWidth, preload.naturalHeight);
             $modalImg.css({ width: targetW + 'px', transform: 'translate(0px, 0px) scale(1)' }).attr('src', item.src);
             $captionText.text(item.caption || '');
@@ -191,102 +232,13 @@ permalink: /photo.html
           $(this).attr('aria-expanded', expanded ? 'true' : 'false').text(expanded ? '접기' : '더보기');
         });
 
-        // Swipe navigation + pinch zoom + double tap
-        var pointers = new Map();
-        var baseScale = 1, scale = 1, minScale = 1, maxScale = 4;
-        var tx = 0, ty = 0; // translation in px
-        var lastTapTime = 0;
-
-        function resetZoomState(){
-          baseScale = 1; scale = 1; tx = 0; ty = 0;
-          if ($modalImg[0]) $modalImg[0].style.transform = 'translate(0px, 0px) scale(1)';
-        }
-
-        function applyTransform(){
-          $modalImg[0].style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
-        }
-
-        function clampPan(){
-          // limit panning so that you can't drag far beyond viewport
-          var imgRect = $modalImg[0].getBoundingClientRect();
-          var vpRect = viewport.getBoundingClientRect();
-          var halfW = (imgRect.width * scale) / 2;
-          var halfH = (imgRect.height * scale) / 2;
-          var maxX = Math.max(0, halfW - vpRect.width/2);
-          var maxY = Math.max(0, halfH - vpRect.height/2);
-          tx = Math.min(Math.max(tx, -maxX), maxX);
-          ty = Math.min(Math.max(ty, -maxY), maxY);
-        }
-
-        function distance(p1, p2){ var dx = p1.clientX - p2.clientX, dy = p1.clientY - p2.clientY; return Math.hypot(dx, dy); }
-        function midpoint(p1, p2){ return { x: (p1.clientX + p2.clientX)/2, y: (p1.clientY + p2.clientY)/2 }; }
-
-        var startX=0, startY=0, startTime=0, lastX=0, lastY=0;
-        viewport.addEventListener('pointerdown', function(e){
-          viewport.setPointerCapture(e.pointerId);
-          pointers.set(e.pointerId, e);
-          startTime = Date.now();
-          startX = lastX = e.clientX;
-          startY = lastY = e.clientY;
-        });
-        viewport.addEventListener('pointermove', function(e){
-          if (!pointers.has(e.pointerId)) return;
-          pointers.set(e.pointerId, e);
-
-          if (pointers.size === 1){
-            // pan or swipe
-            var dx = e.clientX - lastX, dy = e.clientY - lastY;
-            lastX = e.clientX; lastY = e.clientY;
-
-            if (scale > 1){
-              tx += dx; ty += dy; clampPan(); applyTransform();
-            }
-          } else if (pointers.size === 2){
-            // pinch
-            var arr = Array.from(pointers.values());
-            var p1 = arr[0], p2 = arr[1];
-            var curDist = distance(p1, p2);
-            if (!viewport._startDist){
-              viewport._startDist = curDist;
-              viewport._startScale = scale;
-            } else {
-              var next = Math.min(maxScale, Math.max(minScale, viewport._startScale * (curDist / viewport._startDist)));
-              // simple scaling around center; for better UX we could keep midpoint stable
-              scale = next; clampPan(); applyTransform();
-            }
-          }
-        });
-        function endGesture(e){
-          if (pointers.has(e.pointerId)) pointers.delete(e.pointerId);
-          if (pointers.size < 2){ viewport._startDist = null; viewport._startScale = null; }
-
-          // swipe to prev/next only when not zoomed
-          if (pointers.size === 0 && scale === 1){
-            var dt = Date.now() - startTime;
-            var dx = e.clientX - startX, dy = e.clientY - startY;
-            if (Math.abs(dx) > 60 && Math.abs(dy) < 40 && dt < 500){
-              if (dx < 0) openByIndex(currentIndex + 1); else openByIndex(currentIndex - 1);
-            }
-          }
-        }
-        viewport.addEventListener('pointerup', endGesture);
-        viewport.addEventListener('pointercancel', endGesture);
-        viewport.addEventListener('pointerleave', function(e){ if (pointers.has(e.pointerId)) endGesture(e); });
-
-        // double-tap to toggle zoom
-        viewport.addEventListener('pointerdown', function(e){
-          var now = Date.now();
-          if (now - lastTapTime < 300){
-            if (scale === 1){ scale = 2; } else { scale = 1; tx = 0; ty = 0; }
-            clampPan(); applyTransform();
-          }
-          lastTapTime = now;
-        });
+        // Button navigation (no swipe)
+        $(document).on('click', '.modal-controls .prev', function(e){ e.stopPropagation(); openByIndex(currentIndex - 1); });
+        $(document).on('click', '.modal-controls .next', function(e){ e.stopPropagation(); openByIndex(currentIndex + 1); });
 
         // Keyboard arrows for desktop
         document.addEventListener('keydown', function(e){
           if (!$modal.is(':visible')) return;
-          if (scale > 1) return; // don't navigate while zoomed
           if (e.key === 'ArrowRight') { openByIndex(currentIndex + 1); }
           else if (e.key === 'ArrowLeft') { openByIndex(currentIndex - 1); }
           else if (e.key === 'Escape') { $modal.modal('hide'); }
@@ -299,22 +251,18 @@ permalink: /photo.html
         }
         var refit = (function(){ var t; return function(){ clearTimeout(t); t=setTimeout(function(){
           var w = computeTargetWidthFromNatural(); if (w==null) return;
-          if (scale === 1){ $modalImg.css({ width: w + 'px', transform:'translate(0px,0px) scale(1)' }); $modal.find('.modal-content').css('max-width', w + 'px'); }
-          else { clampPan(); applyTransform(); }
+          $modalImg.css({ width: w + 'px', transform:'translate(0px,0px) scale(1)' }); $modal.find('.modal-content').css('max-width', w + 'px');
         }, 120); };})();
         $(window).on('resize orientationchange', refit);
         if ('visualViewport' in window) window.visualViewport.addEventListener('resize', refit, { passive:true });
 
-        // Close on clicking outside image (but not during gesture)
+        // Close on clicking outside image
         $modal.on('click', '.modal-content', function(e){
-          if (e.target.classList.contains('modal-img')) return; // handled by zoom/swipe
+          if (e.target.classList.contains('modal-img')) return;
           $modal.modal('hide');
         });
-
-        // Click on image also closes if not zoomed
-        $modal.on('click', '.modal-img', function(){
-          if (scale === 1) $modal.modal('hide');
-        });
+        // Close on image click (optional)
+        $modal.on('click', '.modal-img', function(){ $modal.modal('hide'); });
       });
     })(jQuery);
   </script>
