@@ -96,3 +96,58 @@ body {
         }
     }
 }
+
+// New styles for photo.html
+.photo-grid {
+    column-count: 3; // 기본 3열 타일, 화면 크기에 따라 자동 조정
+    column-gap: 1rem;
+    margin: 2rem auto;
+    max-width: 1200px;
+}
+
+.photo-item {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    
+    &:hover {
+        transform: scale(1.05);
+    }
+    
+    img {
+        width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+}
+
+@media (max-width: 768px) {
+    .photo-grid {
+        column-count: 2;
+    }
+}
+
+@media (max-width: 480px) {
+    .photo-grid {
+        column-count: 1;
+    }
+}
+
+// Modal enhancements
+.modal-content {
+    background: $theme-light;
+    border-radius: 12px;
+}
+
+.modal-img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+.modal-caption {
+    font-style: italic;
+    color: $theme-gray;
+    text-align: center;
+}

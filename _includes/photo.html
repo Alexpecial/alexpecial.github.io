@@ -1,0 +1,72 @@
+{% include head.html %}
+
+<body id="page-top">
+
+  {% include nav.html %}
+
+  <section id="photos" class="content-section bg-light">
+    <div class="container">
+      <div class="content-section-heading text-center">
+        <h3 class="text-secondary mb-0">Photo Album</h3>
+        <h2 class="mb-5">Family Memories</h2>
+      </div>
+      <div class="photo-grid">
+        <!-- Photos will be dynamically added here via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Bootstrap Modal for enlarged photo -->
+  <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="photoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="photoModalLabel">Photo Detail</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+          <img class="modal-img" src="" alt="Enlarged Photo">
+          <p class="modal-caption"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include scripts.html %}
+
+  <!-- Add Masonry.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/imagesloaded@4.1.4/imagesloaded.pkgd.min.js"></script>
+
+  <!-- Script to generate photo tiles dynamically -->
+  <script>
+    $(document).ready(function() {
+      // Add your photos here: src and caption
+      var photos = [
+        { src: 'img/fam/photo1.jpg', caption: '이 사진은 가족 여행 중 찍은 거예요. 행복한 추억입니다.' },
+        { src: 'img/fam/photo2.jpg', caption: '아이들이 웃는 모습이 제일 좋아요. 매일 감사합니다.' },
+        { src: 'img/fam/photo3.jpg', caption: '함께한 저녁 식사. 소중한 시간이었어요.' },
+        // Add more photos like this: { src: 'img/fam/yourfile.jpg', caption: 'Your short letter here' }
+      ];
+
+      // Dynamically create photo items
+      photos.forEach(function(photo) {
+        var item = $('<div class="photo-item" data-src="' + photo.src + '" data-caption="' + photo.caption + '"><img src="' + photo.src + '" alt="Family Photo"></div>');
+        $('.photo-grid').append(item);
+      });
+
+      // Initialize Masonry after adding items
+      $('.photo-grid').imagesLoaded(function() {
+        $('.photo-grid').masonry({
+          itemSelector: '.photo-item',
+          percentPosition: true,
+          gutter: 10
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

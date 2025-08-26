@@ -1,5 +1,5 @@
 /*!
- * Start Bootstrap - Creative Bootstrap Theme (http://startbootstrap.com)
+ * Start Bootstrap - Creative Bootstrap Theme[](http://startbootstrap.com)
  * Code licensed under the Apache License v2.0.
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
@@ -44,5 +44,27 @@
 
     // Initialize WOW.js Scrolling Animations
     new WOW().init();
+
+    // New code for photo.html: Initialize Masonry and handle photo clicks
+    if ($('.photo-grid').length) {
+        // Wait for images to load before initializing Masonry
+        $('.photo-grid').imagesLoaded(function() {
+            $('.photo-grid').masonry({
+                itemSelector: '.photo-item',
+                columnWidth: '.photo-item',
+                percentPosition: true,
+                gutter: 10
+            });
+        });
+
+        // Photo click event to open modal
+        $('.photo-item').on('click', function() {
+            var src = $(this).data('src');
+            var caption = $(this).data('caption');
+            $('#photoModal .modal-img').attr('src', src);
+            $('#photoModal .modal-caption').text(caption);
+            $('#photoModal').modal('show');
+        });
+    }
 
 })(jQuery); // End of use strict
