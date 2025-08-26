@@ -119,7 +119,14 @@ permalink: /photo.html
     .photo-item.is-loaded img.photo-img{ opacity:1; pointer-events:auto; }
 
     /* Modal */
-    #photoModal .modal-dialog{ width:auto; max-width:100vw; margin:1rem auto; }
+    #photoModal .modal-dialog{
+      position: fixed;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0;                 /* ignore Bootstrap's auto margins */
+      width: auto;
+      max-width: calc(100vw - 2rem);
+    }
     #photoModal .modal-content.no-header{ max-height:calc(100vh - 2rem); display:flex; flex-direction:column; align-items:center; justify-content:center; background:#000; border-radius:18px; box-shadow:0 10px 30px rgba(0,0,0,.3); }
     #photoModal .modal-body{ padding:0; overflow:hidden; width:100%; height:100%; }
     #photoModal .modal-figure{ position:relative; max-width:100%; max-height:100%; margin:0 auto; }
