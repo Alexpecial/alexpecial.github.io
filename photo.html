@@ -11,19 +11,41 @@ permalink: /photo.html
   <section id="photos" class="content-section bg-light">
     <div class="container">
       <div class="content-section-heading text-center">
-        <h3 class="text-secondary mb-0">Photo Album</h3>
         <h2 class="mb-5">Family Memories</h2>
       </div>
 
-      <div class="photo-grid">
-        <!-- JS가 여기로 카드를 주입 -->
+      <div class="photo-grid" aria-live="polite">
+        {%- assign items = site.data.photos | default: empty -%}
+        {%- for p in items -%}
+          {%- assign base = p.base -%}
+          {%- assign caption = p.caption | default: '' -%}
+          {%- assign thumb800  = p.thumb800  | default: base | replace: '.jpg','_800.jpg'  | replace: '.jpeg','_800.jpeg' | replace: '.png','_800.png' -%}
+          {%- assign thumb1200 = p.thumb1200 | default: base | replace: '.jpg','_1200.jpg' | replace: '.jpeg','_1200.jpeg'| replace: '.png','_1200.png' -%}
+
+          <div class="photo-item"
+               tabindex="0"
+               role="button"
+               aria-label="Open photo"
+               data-full="{{ base | relative_url }}"
+               data-caption="{{ caption | escape }}"
+               style="aspect-ratio: 3 / 2;">
+            <img class="photo-img"
+                 loading="lazy"
+                 decoding="async"
+                 fetchpriority="low"
+                 src="{{ thumb800   | relative_url }}"
+                 srcset="{{ thumb800 | relative_url }} 800w, {{ thumb1200 | relative_url }} 1200w"
+                 sizes="(min-width: 992px) 31vw, (min-width: 576px) 48vw, 100vw"
+                 alt="{{ caption | default: 'Family Photo' | escape }}">
+          </div>
+        {%- endfor -%}
       </div>
     </div>
   </section>
 
   <!-- 확대 보기 (모달) -->
   <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="photoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="photoModalLabel">Photo Detail</h5>
@@ -31,9 +53,9 @@ permalink: /photo.html
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body text-center">
+        <div class="modal-body d-flex flex-column align-items-center">
           <img class="modal-img" src="" alt="Enlarged Photo">
-          <p class="modal-caption mt-3 mb-0"></p>
+          <p class="modal-caption mt-3 mb-0 text-center w-100"></p>
         </div>
       </div>
     </div>
@@ -45,12 +67,8 @@ permalink: /photo.html
   <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/imagesloaded@4.1.4/imagesloaded.pkgd.min.js"></script>
 
-  <!-- 페이지 전용 스타일: Masonry 카드 + Ken Burns(다이내믹 팬) -->
   <style>
-    .photo-grid {
-      /* Masonry가 위치를 계산하므로 margin만 관리 */
-      margin: 0 auto;
-    }
+    .photo-grid { margin: 0 auto; }
     .photo-item {
       width: 31%;
       margin-bottom: 10px;
@@ -64,75 +82,148 @@ permalink: /photo.html
     @media (max-width: 992px) { .photo-item { width: 48%; } }
     @media (max-width: 576px) { .photo-item { width: 100%; } }
 
-    .photo-item img {
-      display: block;
+    .photo-item img.photo-img {
       width: 100%;
-      height: auto;
+      height: 100%;
+      object-fit: cover;
       transform-origin: center;
       animation: kenburns 14s ease-in-out infinite alternate;
-      will-change: transform;
-    }
-    /* hover 시 과도한 움직임 방지 + 멈춤 */
-    .photo-item:hover img {
       animation-play-state: paused;
+      display: block;
     }
-    /* iPhone Photos 느낌의 부드러운 팬/줌 */
     @keyframes kenburns {
-      0%   { transform: scale(1.05) translate3d(-1.5%, -1.5%, 0); }
-      100% { transform: scale(1.12) translate3d( 1.5%,  1.5%, 0); }
+      0%   { transform: scale(1.02) translate3d(-1%, -1%, 0); }
+      100% { transform: scale(1.05) translate3d( 1%,  1%, 0); }
     }
 
-    /* 모달 이미지는 애니메이션 없이 크게 */
-    .modal-img {
-      max-width: 100%;
+    /* 모달: 화면을 꽉 채우는 쪽으로 최적화 (부트스트랩 한계 해제) */
+    #photoModal .modal-dialog {
+      width: auto;
+      max-width: 100vw;      /* 가로는 뷰포트 한계 */
+      margin: 1rem;          /* 모바일에서도 여백 확보 */
+    }
+    #photoModal .modal-content {
+      max-height: calc(100vh - 2rem); /* 상하 여백을 뺀 높이 */
+      display: flex;
+      flex-direction: column;
+    }
+    #photoModal .modal-body {
+      overflow: auto;               /* 캡션이 길어도 스크롤 */
+      padding: 0.75rem 1rem 1rem;
+      flex: 1 1 auto;
+      align-items: center;
+      justify-content: center;
+    }
+    #photoModal .modal-img {
+      display: block;
+      max-width: none;              /* JS가 width/height를 직접 지정 */
       height: auto;
       border-radius: 8px;
       box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      transition: width .15s ease, height .15s ease;
+      touch-action: manipulation;
     }
   </style>
 
-  <!-- 사진 주입 + Masonry 초기화 + 모달 핸들러 -->
   <script>
-    $(function () {
-      // 1) 사진 목록 (원하실 때 계속 추가)
-      var photos = [
-        { src: 'img/fam/photo1.jpg', caption: '이 사진은 가족 여행 중 찍은 거예요. 행복한 추억입니다.' },
-        { src: 'img/fam/photo2.jpg', caption: '아이들이 웃는 모습이 제일 좋아요. 매일 감사합니다.' },
-        { src: 'img/fam/photo3.jpg', caption: '함께한 저녁 식사. 소중한 시간이었어요.' },
-        // 예: { src: 'img/fam/yourfile.jpg', caption: '여기에 짧은 설명' }
-      ];
+    (function($){
+      $(function () {
+        var $grid = $('.photo-grid');
 
-      // 2) 카드 DOM 생성
-      var $grid = $('.photo-grid');
-      photos.forEach(function (p) {
-        var $item = $(
-          '<div class="photo-item" tabindex="0" role="button" aria-label="Open photo">' +
-            '<img loading="lazy" src="' + p.src + '" alt="Family Photo">' +
-          '</div>'
-        );
-        $item.data('src', p.src).data('caption', p.caption);
-        $grid.append($item);
-      });
-
-      // 3) 이미지 로딩 후 Masonry 레이아웃
-      $grid.imagesLoaded(function () {
-        $grid.masonry({
-          itemSelector: '.photo-item',
-          percentPosition: true,
-          gutter: 10
+        // Masonry 초기화
+        $grid.imagesLoaded(function () {
+          $grid.masonry({
+            itemSelector: '.photo-item',
+            percentPosition: true,
+            gutter: 10
+          });
         });
-      });
 
-      // 4) 클릭/엔터로 모달 열기
-      $grid.on('click keydown', '.photo-item', function (e) {
-        if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
-        var src = $(this).data('src');
-        var caption = $(this).data('caption') || '';
-        $('.modal-img').attr('src', src);
-        $('.modal-caption').text(caption);
-        $('#photoModal').modal('show');
+        // 유틸: 디바운스
+        function debounce(fn, delay){
+          var t; return function(){ clearTimeout(t); var args=arguments, self=this; t=setTimeout(function(){ fn.apply(self,args); }, delay); };
+        }
+
+        // 모달 관련
+        var $modal = $('#photoModal');
+        var $modalImg = $modal.find('.modal-img');
+        var $modalCaption = $modal.find('.modal-caption');
+
+        function fitModalImage() {
+          var img = $modalImg[0];
+          if (!img || !img.naturalWidth || !img.naturalHeight) return;
+
+          // 뷰포트 크기
+          var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+          var vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+
+          // 모달 헤더, 바디 패딩/여백 고려
+          var header = $modal.find('.modal-header')[0];
+          var body = $modal.find('.modal-body')[0];
+          var headerH = header ? header.getBoundingClientRect().height : 0;
+
+          var bodyStyles = window.getComputedStyle(body);
+          var bodyPadV = parseFloat(bodyStyles.paddingTop) + parseFloat(bodyStyles.paddingBottom);
+
+          // 외부 마진(모달 다이얼로그 margin) 2rem 고려
+          var outerMargin = 32; // px
+
+          var maxW = vw - outerMargin * 2;
+          var maxH = vh - outerMargin * 2 - headerH - bodyPadV;
+
+          // 원본 기준으로 업스케일 금지
+          var nw = img.naturalWidth;
+          var nh = img.naturalHeight;
+
+          var scale = Math.min(1, maxW / nw, maxH / nh);
+          var targetW = Math.floor(nw * scale);
+          var targetH = Math.floor(nh * scale);
+
+          // 이미지 사이즈 적용
+          $modalImg.css({ width: targetW + 'px', height: targetH + 'px' });
+
+          // 캡션 줄바꿈 대응을 위해 modal-content 최대폭 보정
+          $modal.find('.modal-content').css('max-width', (targetW + 32) + 'px'); // 좌우 패딩 고려
+        }
+
+        var fitModalImageDebounced = debounce(fitModalImage, 100);
+
+        // 클릭/엔터로 모달 열기
+        $grid.on('click keydown', '.photo-item', function (e) {
+          if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+          var src = this.dataset.full;
+          var caption = this.dataset.caption || '';
+
+          // 먼저 src 주입
+          $modalImg.off('load').on('load', fitModalImageDebounced);
+          $modalImg.attr('src', src);
+          $modalCaption.text(caption);
+
+          // 모달 띄운 뒤 강제 1회 피팅
+          $modal.one('shown.bs.modal', fitModalImageDebounced).modal('show');
+        });
+
+        // 리사이즈/오리엔테이션 변경 대응
+        $(window).on('resize orientationchange', fitModalImageDebounced);
+        // 폰 가상 키보드 등으로 vh가 바뀌는 안드로이드 케이스 보정
+        window.addEventListener('visualViewport' in window ? 'resize' : 'scroll', fitModalImageDebounced, { passive: true });
+
+        // 보이는 타일만 Ken Burns 실행
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function(entries){
+            entries.forEach(function(entry){
+              var img = entry.target.querySelector('img.photo-img');
+              if (!img) return;
+              img.style.animationPlayState = entry.isIntersecting ? 'running' : 'paused';
+            });
+          }, { rootMargin: '200px' });
+
+          document.querySelectorAll('.photo-item').forEach(function(item){
+            io.observe(item);
+          });
+        }
       });
-    });
+    })(jQuery);
   </script>
 </body>
 </html>

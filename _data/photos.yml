@@ -1,0 +1,22 @@
+# _data/photos.yml
+# 기본 규칙:
+# - base: 원본 이미지 경로 (반드시 존재)
+# - caption: (선택) 캡션
+# - ratio: (선택) CSS aspect-ratio 값. 예: "4 / 3", "3 / 4", "1 / 1".
+#          세로/가로 비율이 제각각이어도 이 값으로 타일 프레임을 제어합니다.
+#          미지정 시 3 / 2 로 렌더됩니다.
+# - thumb800, thumb1200: (선택) 썸네일 경로를 직접 지정하고 싶을 때.
+#          비워두면 base 파일명에서 자동으로 _800, _1200 접미사를 붙여 추론합니다.
+#          (jpg/jpeg/png 지원)
+
+- base: img/fam/photo1.jpg
+  caption: "가족 여행의 한 장면"
+  ratio: "4 / 3"         # 가로가 긴 사진
+
+- base: img/fam/photo2.jpg
+  caption: "웃음 가득한 날"
+  ratio: "3 / 4"         # 세로가 긴 사진
+
+- base: img/fam/photo3.jpg
+  caption: "저녁 식사 추억"
+  ratio: "1 / 1"         # 정사각형 느낌
