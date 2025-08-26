@@ -45,7 +45,7 @@ permalink: /photo.html
 
   <!-- 확대 보기 (모달) -->
   <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="photoModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="photoModalLabel">Photo Detail</h5>
@@ -96,16 +96,17 @@ permalink: /photo.html
       100% { transform: scale(1.05) translate3d( 1%,  1%, 0); }
     }
 
-    /* 모달: 화면을 꽉 채우는 쪽으로 최적화 (부트스트랩 한계 해제) */
+    /* 모달: 화면을 꽉 채우는 쪽으로 최적화 (가운데 정렬 보장) */
     #photoModal .modal-dialog {
       width: auto;
-      max-width: 100vw;      /* 가로는 뷰포트 한계 */
-      margin: 1rem;          /* 모바일에서도 여백 확보 */
+      max-width: 100vw;
+      margin: 1rem auto;     /* 좌우 auto로 가로 중앙 정렬 */
     }
     #photoModal .modal-content {
       max-height: calc(100vh - 2rem); /* 상하 여백을 뺀 높이 */
       display: flex;
       flex-direction: column;
+      align-items: center;   /* 내용 가로 중앙 */
     }
     #photoModal .modal-body {
       overflow: auto;               /* 캡션이 길어도 스크롤 */
@@ -113,14 +114,16 @@ permalink: /photo.html
       flex: 1 1 auto;
       align-items: center;
       justify-content: center;
+      width: 100%;
     }
     #photoModal .modal-img {
       display: block;
-      max-width: none;              /* JS가 width/height를 직접 지정 */
+      max-width: 100%;
+      max-height: calc(100vh - 2rem - 56px - 1.5rem); /* 뷰포트-외여백-헤더-바디패딩 대략치 */
       height: auto;
       border-radius: 8px;
       box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-      transition: width .15s ease, height .15s ease;
+      /* transition 제거 -> 울렁임 방지 */
       touch-action: manipulation;
     }
   </style>
@@ -139,6 +142,20 @@ permalink: /photo.html
           });
         });
 
+        // 0) 타일 썸네일 로드 실패 시 기본 원본으로 폴백 (물음표 방지)
+        document.querySelectorAll('img.photo-img').forEach(function(img){
+          img.addEventListener('error', function(){
+            var item = img.closest('.photo-item');
+            if (!item) return;
+            var fallback = item.getAttribute('data-full');
+            if (img.src !== fallback) {
+              img.removeAttribute('srcset');
+              img.removeAttribute('sizes');
+              img.src = fallback;
+            }
+          }, { once: true });
+        });
+
         // 유틸: 디바운스
         function debounce(fn, delay){
           var t; return function(){ clearTimeout(t); var args=arguments, self=this; t=setTimeout(function(){ fn.apply(self,args); }, delay); };
@@ -149,64 +166,74 @@ permalink: /photo.html
         var $modalImg = $modal.find('.modal-img');
         var $modalCaption = $modal.find('.modal-caption');
 
-        function fitModalImage() {
-          var img = $modalImg[0];
-          if (!img || !img.naturalWidth || !img.naturalHeight) return;
+        // 1) 사전 프리로드 + 치수 계산 후 모달 표시 (깜빡임/재스케일 방지)
+        function openModalWithFit(src, caption){
+          var img = new Image();
+          img.onload = function(){
+            // 뷰포트 한계 내에서 원본을 업스케일 없이 최대화
+            var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+            var vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+            var outerMargin = 32; // modal-dialog margin 1rem 양쪽
+            var headerH = $modal.find('.modal-header').outerHeight() || 56;
+            var bodyPadV = 24; // .modal-body padding top+bottom
 
-          // 뷰포트 크기
-          var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-          var vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+            var maxW = vw - outerMargin * 2;
+            var maxH = vh - outerMargin * 2 - headerH - bodyPadV;
 
-          // 모달 헤더, 바디 패딩/여백 고려
-          var header = $modal.find('.modal-header')[0];
-          var body = $modal.find('.modal-body')[0];
-          var headerH = header ? header.getBoundingClientRect().height : 0;
+            var nw = img.naturalWidth;
+            var nh = img.naturalHeight;
+            var scale = Math.min(1, maxW / nw, maxH / nh);
+            var targetW = Math.floor(nw * scale);
 
-          var bodyStyles = window.getComputedStyle(body);
-          var bodyPadV = parseFloat(bodyStyles.paddingTop) + parseFloat(bodyStyles.paddingBottom);
+            // 이미지/캡션 주입 전에 사이즈를 먼저 설정
+            $modalImg.css({ width: targetW + 'px' });
+            $modalImg.attr('src', src);
+            $modalCaption.text(caption || '');
 
-          // 외부 마진(모달 다이얼로그 margin) 2rem 고려
-          var outerMargin = 32; // px
-
-          var maxW = vw - outerMargin * 2;
-          var maxH = vh - outerMargin * 2 - headerH - bodyPadV;
-
-          // 원본 기준으로 업스케일 금지
-          var nw = img.naturalWidth;
-          var nh = img.naturalHeight;
-
-          var scale = Math.min(1, maxW / nw, maxH / nh);
-          var targetW = Math.floor(nw * scale);
-          var targetH = Math.floor(nh * scale);
-
-          // 이미지 사이즈 적용
-          $modalImg.css({ width: targetW + 'px', height: targetH + 'px' });
-
-          // 캡션 줄바꿈 대응을 위해 modal-content 최대폭 보정
-          $modal.find('.modal-content').css('max-width', (targetW + 32) + 'px'); // 좌우 패딩 고려
+            // 모달 콘텐츠 폭을 이미지 폭에 맞춤
+            $modal.find('.modal-content').css('max-width', (targetW + 32) + 'px');
+            $modal.modal('show');
+          };
+          img.onerror = function(){
+            // 프리로드 실패 시에도 모달을 열되 브라우저에 맡김
+            $modalImg.attr('src', src);
+            $modalCaption.text(caption || '');
+            $modal.modal('show');
+          };
+          img.src = src;
         }
 
-        var fitModalImageDebounced = debounce(fitModalImage, 100);
+        var fitModalImageDebounced = debounce(function(){
+          // 모달 표시 후에도 창 크기 변경에 적응 (재깜빡임 없이 현재 비율 유지)
+          var img = $modalImg[0];
+          if (!img || !img.naturalWidth || !img.naturalHeight) return;
+          var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+          var vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+          var outerMargin = 32;
+          var headerH = $modal.find('.modal-header').outerHeight() || 56;
+          var bodyPadV = 24;
+          var maxW = vw - outerMargin * 2;
+          var maxH = vh - outerMargin * 2 - headerH - bodyPadV;
+          var nw = img.naturalWidth, nh = img.naturalHeight;
+          var scale = Math.min(1, maxW / nw, maxH / nh);
+          var targetW = Math.floor(nw * scale);
+          $modalImg.css({ width: targetW + 'px' });
+          $modal.find('.modal-content').css('max-width', (targetW + 32) + 'px');
+        }, 100);
 
         // 클릭/엔터로 모달 열기
         $grid.on('click keydown', '.photo-item', function (e) {
           if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
           var src = this.dataset.full;
           var caption = this.dataset.caption || '';
-
-          // 먼저 src 주입
-          $modalImg.off('load').on('load', fitModalImageDebounced);
-          $modalImg.attr('src', src);
-          $modalCaption.text(caption);
-
-          // 모달 띄운 뒤 강제 1회 피팅
-          $modal.one('shown.bs.modal', fitModalImageDebounced).modal('show');
+          openModalWithFit(src, caption);
         });
 
         // 리사이즈/오리엔테이션 변경 대응
         $(window).on('resize orientationchange', fitModalImageDebounced);
-        // 폰 가상 키보드 등으로 vh가 바뀌는 안드로이드 케이스 보정
-        window.addEventListener('visualViewport' in window ? 'resize' : 'scroll', fitModalImageDebounced, { passive: true });
+        if ('visualViewport' in window) {
+          window.visualViewport.addEventListener('resize', fitModalImageDebounced, { passive: true });
+        }
 
         // 보이는 타일만 Ken Burns 실행
         if ('IntersectionObserver' in window) {
