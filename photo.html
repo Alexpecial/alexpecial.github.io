@@ -186,7 +186,7 @@ permalink: /photo.html
       width: auto;
       height: auto;
       max-width: 100%;
-      max-height: calc(90vh - 80px);
+      max-height: calc(90vh - 120px);  /* 캡션 공간 더 확보 */
       object-fit: contain;
       border-radius: 8px;
       box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
@@ -197,15 +197,21 @@ permalink: /photo.html
       color: white;
       text-align: center;
       margin-top: 15px;
-      padding: 10px 20px;
+      padding: 15px 25px;  /* 상하 패딩 증가 */
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
       border-radius: 8px;
-      font-size: 1rem;
-      max-width: 100%;
+      font-size: 1.1rem;  /* 폰트 크기 살짝 증가 */
+      min-width: var(--image-width, auto);  /* 이미지 너비와 동일하게 */
+      width: 100%;
+      max-width: 90vw;
       word-wrap: break-word;
-      max-height: 100px;
+      min-height: 50px;  /* 최소 높이 설정 */
+      max-height: 150px;  /* 최대 높이 증가 */
       overflow-y: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .modal-caption::-webkit-scrollbar {
@@ -220,31 +226,6 @@ permalink: /photo.html
     .modal-caption::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.3);
       border-radius: 3px;
-    }
-
-    /* 닫기 버튼 */
-    .modal-close {
-      position: absolute;
-      top: -40px;
-      right: 0;
-      color: white;
-      font-size: 2rem;
-      font-weight: 300;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-      background: rgba(255, 255, 255, 0.1);
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      line-height: 1;
-    }
-
-    .modal-close:hover {
-      transform: rotate(90deg);
-      background: rgba(255, 255, 255, 0.2);
     }
 
     /* 애니메이션 */
@@ -312,8 +293,14 @@ permalink: /photo.html
       }
       
       .modal-caption {
-        font-size: 0.9rem;
-        padding: 8px 15px;
+        font-size: 1rem;
+        padding: 12px 20px;
+        min-height: 45px;
+        max-height: 120px;
+      }
+      
+      .modal-image {
+        max-height: calc(90vh - 100px);
       }
       
       .back-home {
@@ -345,14 +332,25 @@ permalink: /photo.html
       .photo-tile {
         border-radius: 8px;
       }
+      
+      .modal-caption {
+        font-size: 0.95rem;
+        padding: 10px 15px;
+        min-height: 40px;
+        max-height: 100px;
+      }
+      
+      .modal-image {
+        max-height: calc(90vh - 90px);
+      }
     }
   </style>
 </head>
 <body>
   <div class="gallery-container">
     <div class="gallery-header">
-      <h1>Photo Gallery</h1>
-      <p>소중한 순간들을 담았습니다</p>
+      <h1>SECRET GARDEN</h1>
+      <!-- <p>소중한 순간들을 담았습니다</p> -->
     </div>
     
     <div class="photo-grid" id="photoGrid">
@@ -378,7 +376,6 @@ permalink: /photo.html
   <!-- 모달 오버레이 -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal-content-wrapper">
-      <span class="modal-close">&times;</span>
       <img class="modal-image" id="modalImage" src="" alt="">
       <div class="modal-caption" id="modalCaption"></div>
     </div>
@@ -393,7 +390,6 @@ permalink: /photo.html
       const modalOverlay = document.getElementById('modalOverlay');
       const modalImage = document.getElementById('modalImage');
       const modalCaption = document.getElementById('modalCaption');
-      const modalClose = document.querySelector('.modal-close');
 
       // 이미지 로드 완료 처리
       photoTiles.forEach(tile => {
@@ -439,13 +435,9 @@ permalink: /photo.html
 
       // 모달 닫기 - 오버레이 클릭
       modalOverlay.addEventListener('click', function(e) {
-        if (e.target === modalOverlay || e.target === modalImage) {
-          closeModal();
-        }
+        // 어디든 클릭하면 닫힘
+        closeModal();
       });
-
-      // 모달 닫기 - X 버튼 클릭
-      modalClose.addEventListener('click', closeModal);
 
       // ESC 키로 모달 닫기
       document.addEventListener('keydown', function(e) {
@@ -459,6 +451,7 @@ permalink: /photo.html
         modalOverlay.classList.remove('active');
         modalImage.src = '';
         modalCaption.textContent = '';
+        modalCaption.style.setProperty('--image-width', 'auto');
       }
 
       // 이미지 크기 조정 - 중앙 정렬 보장
@@ -466,7 +459,7 @@ permalink: /photo.html
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
         const maxWidth = viewportWidth * 0.9;
-        const maxHeight = viewportHeight * 0.85; // 캡션 공간 확보
+        const maxHeight = viewportHeight * 0.85; // 캡션 공간 더 확보
         
         const imgWidth = modalImage.naturalWidth;
         const imgHeight = modalImage.naturalHeight;
@@ -477,17 +470,26 @@ permalink: /photo.html
           modalImage.style.height = 'auto';
           modalImage.style.maxWidth = '100%';
           modalImage.style.maxHeight = `${maxHeight}px`;
+          
+          // 캡션 너비를 이미지 너비와 동일하게 설정
+          modalCaption.style.setProperty('--image-width', `${imgWidth}px`);
         } else {
           // 비율 계산
           const widthRatio = maxWidth / imgWidth;
           const heightRatio = maxHeight / imgHeight;
           const ratio = Math.min(widthRatio, heightRatio);
           
+          const finalWidth = imgWidth * ratio;
+          const finalHeight = imgHeight * ratio;
+          
           // 크기 적용
-          modalImage.style.width = `${imgWidth * ratio}px`;
-          modalImage.style.height = `${imgHeight * ratio}px`;
+          modalImage.style.width = `${finalWidth}px`;
+          modalImage.style.height = `${finalHeight}px`;
           modalImage.style.maxWidth = '100%';
           modalImage.style.maxHeight = `${maxHeight}px`;
+          
+          // 캡션 너비를 이미지 너비와 동일하게 설정
+          modalCaption.style.setProperty('--image-width', `${finalWidth}px`);
         }
       }
 
