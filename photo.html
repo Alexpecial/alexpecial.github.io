@@ -201,18 +201,18 @@ permalink: /photo.html
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
       border-radius: 8px;
-      font-size: 1rem; /* 1.1rem에서 1rem으로 수정 */
+      font-size: 1rem;
       min-width: var(--image-width, auto);
       width: 100%;
       max-width: 90vw;
       word-wrap: break-word;
       min-height: 50px;
       max-height: 150px;
-      overflow: hidden; /* 기본적으로 스크롤 숨김 */
+      overflow: hidden;
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      line-height: 1.6;
+      line-height: 1.4; /* 줄간격을 약간 줄여서 더 정확한 계산 */
     }
     
     /* 캡션이 짧을 때 중앙 정렬 */
@@ -440,8 +440,10 @@ permalink: /photo.html
           
           // 캡션 높이에 따라 정렬 및 스크롤 조정
           setTimeout(() => {
-            // 스크롤이 필요한지 확인
-            const isScrollNeeded = modalCaption.scrollHeight > modalCaption.clientHeight;
+            // 스크롤이 필요한지 확인 (여유분 2px 추가해서 정확한 판단)
+            const scrollHeight = modalCaption.scrollHeight;
+            const clientHeight = modalCaption.clientHeight;
+            const isScrollNeeded = scrollHeight > (clientHeight + 2);
             
             if (isScrollNeeded) {
               modalCaption.classList.add('scrollable');
@@ -450,7 +452,7 @@ permalink: /photo.html
               modalCaption.classList.remove('scrollable');
               modalCaption.classList.add('center-aligned');
             }
-          }, 10);
+          }, 50);
           
           // 모달 이미지 크기 최적화
           modalImage.onload = function() {
