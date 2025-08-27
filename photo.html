@@ -186,7 +186,7 @@ permalink: /photo.html
       width: auto;
       height: auto;
       max-width: 100%;
-      max-height: calc(90vh - 120px);  /* 캡션 공간 더 확보 */
+      max-height: calc(90vh - 120px);
       object-fit: contain;
       border-radius: 8px;
       box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
@@ -197,28 +197,33 @@ permalink: /photo.html
       color: white;
       text-align: center;
       margin-top: 15px;
-      padding: 15px 25px;  /* 상하 패딩 증가 */
+      padding: 15px 25px;
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
       border-radius: 8px;
-      font-size: 1.1rem;  /* 폰트 크기 살짝 증가 */
-      min-width: var(--image-width, auto);  /* 이미지 너비와 동일하게 */
+      font-size: 1rem; /* 1.1rem에서 1rem으로 수정 */
+      min-width: var(--image-width, auto);
       width: 100%;
       max-width: 90vw;
       word-wrap: break-word;
-      min-height: 50px;  /* 최소 높이 설정 */
-      max-height: 150px;  /* 최대 높이 증가 */
-      overflow-y: auto;
-      overflow-x: hidden;  /* 가로 스크롤 방지 */
+      min-height: 50px;
+      max-height: 150px;
+      overflow: hidden; /* 기본적으로 스크롤 숨김 */
       display: flex;
-      align-items: flex-start;  /* 위쪽 정렬로 변경 */
+      align-items: flex-start;
       justify-content: center;
-      line-height: 1.6;  /* 줄 간격 추가 */
+      line-height: 1.6;
     }
     
-    /* 캡션 텍스트가 적을 때 중앙 정렬 */
+    /* 캡션이 짧을 때 중앙 정렬 */
     .modal-caption.center-aligned {
       align-items: center;
+    }
+
+    /* 캡션이 길어서 스크롤이 필요할 때만 스크롤 표시 */
+    .modal-caption.scrollable {
+      overflow-y: auto;
+      overflow-x: hidden;
     }
 
     .modal-caption::-webkit-scrollbar {
@@ -433,12 +438,17 @@ permalink: /photo.html
           modalCaption.textContent = caption;
           modalOverlay.classList.add('active');
           
-          // 캡션 높이에 따라 정렬 조정
+          // 캡션 높이에 따라 정렬 및 스크롤 조정
           setTimeout(() => {
-            if (modalCaption.scrollHeight <= modalCaption.clientHeight) {
-              modalCaption.classList.add('center-aligned');
-            } else {
+            // 스크롤이 필요한지 확인
+            const isScrollNeeded = modalCaption.scrollHeight > modalCaption.clientHeight;
+            
+            if (isScrollNeeded) {
+              modalCaption.classList.add('scrollable');
               modalCaption.classList.remove('center-aligned');
+            } else {
+              modalCaption.classList.remove('scrollable');
+              modalCaption.classList.add('center-aligned');
             }
           }, 10);
           
@@ -468,7 +478,7 @@ permalink: /photo.html
         modalImage.src = '';
         modalCaption.textContent = '';
         modalCaption.style.setProperty('--image-width', 'auto');
-        modalCaption.classList.remove('center-aligned');
+        modalCaption.classList.remove('center-aligned', 'scrollable');
       }
 
       // 이미지 크기 조정 - 중앙 정렬 보장
@@ -476,7 +486,7 @@ permalink: /photo.html
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
         const maxWidth = viewportWidth * 0.9;
-        const maxHeight = viewportHeight * 0.85; // 캡션 공간 더 확보
+        const maxHeight = viewportHeight * 0.85;
         
         const imgWidth = modalImage.naturalWidth;
         const imgHeight = modalImage.naturalHeight;
