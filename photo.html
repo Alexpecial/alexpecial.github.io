@@ -209,9 +209,16 @@ permalink: /photo.html
       min-height: 50px;  /* 최소 높이 설정 */
       max-height: 150px;  /* 최대 높이 증가 */
       overflow-y: auto;
+      overflow-x: hidden;  /* 가로 스크롤 방지 */
       display: flex;
-      align-items: center;
+      align-items: flex-start;  /* 위쪽 정렬로 변경 */
       justify-content: center;
+      line-height: 1.6;  /* 줄 간격 추가 */
+    }
+    
+    /* 캡션 텍스트가 적을 때 중앙 정렬 */
+    .modal-caption.center-aligned {
+      align-items: center;
     }
 
     .modal-caption::-webkit-scrollbar {
@@ -226,6 +233,19 @@ permalink: /photo.html
     .modal-caption::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.3);
       border-radius: 3px;
+    }
+    
+    /* 스크롤바가 필요없을 때 숨김 */
+    .modal-caption:not(:hover) {
+      scrollbar-width: thin;
+    }
+    
+    .modal-caption:not(:hover)::-webkit-scrollbar {
+      width: 0;
+    }
+    
+    .modal-caption:hover::-webkit-scrollbar {
+      width: 6px;
     }
 
     /* 애니메이션 */
@@ -426,6 +446,15 @@ permalink: /photo.html
           modalCaption.textContent = caption;
           modalOverlay.classList.add('active');
           
+          // 캡션 높이에 따라 정렬 조정
+          setTimeout(() => {
+            if (modalCaption.scrollHeight <= modalCaption.clientHeight) {
+              modalCaption.classList.add('center-aligned');
+            } else {
+              modalCaption.classList.remove('center-aligned');
+            }
+          }, 10);
+          
           // 모달 이미지 크기 최적화
           modalImage.onload = function() {
             adjustModalImageSize();
@@ -452,6 +481,7 @@ permalink: /photo.html
         modalImage.src = '';
         modalCaption.textContent = '';
         modalCaption.style.setProperty('--image-width', 'auto');
+        modalCaption.classList.remove('center-aligned');
       }
 
       // 이미지 크기 조정 - 중앙 정렬 보장
