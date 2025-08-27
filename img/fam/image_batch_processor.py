@@ -6,6 +6,7 @@ from PIL.ExifTags import TAGS
 import pillow_heif
 from pathlib import Path
 import numpy as np
+import piexif
 
 # HEIC 지원 등록
 pillow_heif.register_heif_opener()
@@ -57,6 +58,20 @@ def get_image_date(image_path):
         mod_time = os.path.getmtime(image_path)
         return datetime.fromtimestamp(mod_time).strftime('%Y%m%d')
 
+def get_exif_data(image):
+    """이미지에서 EXIF 데이터 추출"""
+    try:
+        exifdata = image.info.get('exif', None)
+        if exifdata:
+            return exifdata
+        # getexif() 메서드로도 시도
+        exif = image.getexif()
+        if exif:
+            return exif.tobytes()
+    except:
+        pass
+    return None
+
 def open_image_file(file_path):
     """다양한 포맷의 이미지 파일 열기 (RAW 포함)"""
     # RAW 파일 확장자 목록
@@ -74,12 +89,16 @@ def open_image_file(file_path):
                     no_auto_bright=False, # 자동 밝기 조정
                     output_bps=8          # 8비트 출력
                 )
-                return Image.fromarray(rgb)
+                return Image.fromarray(rgb), None  # RAW는 EXIF 별도 처리
         except Exception as e:
             print(f"  RAW 처리 실패, PIL로 시도: {str(e)}")
-            return Image.open(file_path)
+            img = Image.open(file_path)
+            exif_data = get_exif_data(img)
+            return img, exif_data
     else:
-        return Image.open(file_path)
+        img = Image.open(file_path)
+        exif_data = get_exif_data(img)
+        return img, exif_data
 
 def optimize_image(image, max_size_mb=3, max_dimension=4096):
     """이미지 크기와 용량 최적화 (4096px 기준)"""
@@ -109,9 +128,39 @@ def optimize_image(image, max_size_mb=3, max_dimension=4096):
     
     return image
 
-def save_with_size_limit(image, output_path, max_size_mb=3):
-    """지정된 용량 제한 내에서 이미지 저장"""
+def update_exif_for_resized_image(exif_bytes, new_width, new_height):
+    """리사이즈된 이미지에 맞게 EXIF 데이터 업데이트"""
+    if not exif_bytes:
+        return None
+    
+    try:
+        exif_dict = piexif.load(exif_bytes)
+        
+        # 이미지 크기 관련 EXIF 태그 업데이트
+        exif_dict['Exif'][piexif.ExifIFD.PixelXDimension] = new_width
+        exif_dict['Exif'][piexif.ExifIFD.PixelYDimension] = new_height
+        
+        # 썸네일이 있으면 제거 (리사이즈된 이미지와 맞지 않을 수 있음)
+        if '1st' in exif_dict:
+            exif_dict['1st'] = {}
+        if 'thumbnail' in exif_dict:
+            del exif_dict['thumbnail']
+        
+        return piexif.dump(exif_dict)
+    except:
+        # 오류 발생시 원본 EXIF 반환
+        return exif_bytes
+
+def save_with_size_limit(image, output_path, max_size_mb=3, exif_data=None):
+    """지정된 용량 제한 내에서 이미지 저장 (EXIF 데이터 보존)"""
     max_size_bytes = max_size_mb * 1024 * 1024
+    
+    # 현재 이미지 크기 저장
+    current_width, current_height = image.size
+    
+    # EXIF 데이터 업데이트
+    if exif_data:
+        exif_data = update_exif_for_resized_image(exif_data, current_width, current_height)
     
     # 초기 품질 설정
     quality = 95
@@ -119,15 +168,26 @@ def save_with_size_limit(image, output_path, max_size_mb=3):
     # 임시 파일로 저장하면서 크기 확인
     temp_path = output_path + '.tmp'
     
+    # 저장 옵션 설정
+    save_kwargs = {
+        'format': 'JPEG',
+        'quality': quality,
+        'optimize': True
+    }
+    if exif_data:
+        save_kwargs['exif'] = exif_data
+    
     # 먼저 높은 품질로 시도
     while quality >= 70:
-        image.save(temp_path, 'JPEG', quality=quality, optimize=True)
+        save_kwargs['quality'] = quality
+        image.save(temp_path, **save_kwargs)
         file_size = os.path.getsize(temp_path)
         
         if file_size <= max_size_bytes:
             # 크기가 적절하면 최종 파일로 이동
             shutil.move(temp_path, output_path)
             print(f"    저장 완료 (품질: {quality}%, 크기: {file_size/1024/1024:.2f}MB)")
+            print(f"    EXIF 데이터: {'보존됨' if exif_data else '없음'}")
             return True
         
         # 품질 감소
@@ -139,20 +199,35 @@ def save_with_size_limit(image, output_path, max_size_mb=3):
     
     while scale >= 0.5:
         resized = image.resize((int(width * scale), int(height * scale)), Image.Resampling.LANCZOS)
-        resized.save(temp_path, 'JPEG', quality=75, optimize=True)
+        new_width, new_height = resized.size
+        
+        # EXIF 데이터 업데이트
+        if exif_data:
+            resized_exif = update_exif_for_resized_image(exif_data, new_width, new_height)
+        else:
+            resized_exif = None
+        
+        save_kwargs['quality'] = 75
+        if resized_exif:
+            save_kwargs['exif'] = resized_exif
+        
+        resized.save(temp_path, **save_kwargs)
         file_size = os.path.getsize(temp_path)
         
         if file_size <= max_size_bytes:
             shutil.move(temp_path, output_path)
             print(f"    추가 리사이즈 후 저장 (스케일: {scale:.1%}, 크기: {file_size/1024/1024:.2f}MB)")
+            print(f"    EXIF 데이터: {'보존됨' if resized_exif else '없음'}")
             return True
         
         scale -= 0.1
     
     # 최소 크기로 저장
-    resized.save(output_path, 'JPEG', quality=70, optimize=True)
+    save_kwargs['quality'] = 70
+    resized.save(output_path, **save_kwargs)
     file_size = os.path.getsize(output_path)
     print(f"    최소 설정으로 저장 (크기: {file_size/1024/1024:.2f}MB)")
+    print(f"    EXIF 데이터: {'보존됨' if exif_data else '없음'}")
     
     if os.path.exists(temp_path):
         os.remove(temp_path)
@@ -177,6 +252,7 @@ def process_images(input_folder, output_folder):
     # 처리된 파일 수 추적
     processed = 0
     errors = []
+    metadata_preserved = 0
     
     # 날짜별 파일 카운터
     date_counters = {}
@@ -193,6 +269,8 @@ def process_images(input_folder, output_folder):
     print(f"총 {len(image_files)}개의 이미지 파일을 발견했습니다.")
     if RAWPY_AVAILABLE:
         print("RAW 파일 처리가 활성화되었습니다.")
+    print("EXIF 메타데이터를 보존합니다.")
+    print("-" * 50)
     
     # 각 이미지 파일 처리
     for idx, file_path in enumerate(image_files, 1):
@@ -200,8 +278,8 @@ def process_images(input_folder, output_folder):
             file_name = os.path.basename(file_path)
             print(f"\n처리 중 ({idx}/{len(image_files)}): {file_name}")
             
-            # 1. 이미지 열기 (RAW 포함)
-            image = open_image_file(file_path)
+            # 1. 이미지 열기 (RAW 포함) - EXIF 데이터도 함께 추출
+            image, exif_data = open_image_file(file_path)
             
             # 2. 촬영 날짜 가져오기
             date_str = get_image_date(file_path)
@@ -222,8 +300,11 @@ def process_images(input_folder, output_folder):
             # 4. 이미지 최적화 (4096px 기준)
             optimized_image = optimize_image(image, max_dimension=4096)
             
-            # 5. 크기 제한으로 저장
-            save_with_size_limit(optimized_image, new_path, max_size_mb=3)
+            # 5. 크기 제한으로 저장 (EXIF 데이터 포함)
+            save_with_size_limit(optimized_image, new_path, max_size_mb=3, exif_data=exif_data)
+            
+            if exif_data:
+                metadata_preserved += 1
             
             print(f"  ✓ 완료: {file_name} -> {new_filename}")
             processed += 1
@@ -237,6 +318,7 @@ def process_images(input_folder, output_folder):
     print("\n" + "="*50)
     print(f"처리 완료!")
     print(f"성공: {processed}개 파일")
+    print(f"메타데이터 보존: {metadata_preserved}개 파일")
     print(f"오류: {len(errors)}개 파일")
     print(f"출력 폴더: {output_folder}")
     
@@ -245,9 +327,39 @@ def process_images(input_folder, output_folder):
         for error in errors:
             print(f"  - {error}")
 
+def verify_metadata(image_path):
+    """처리된 이미지의 메타데이터 확인"""
+    try:
+        image = Image.open(image_path)
+        exifdata = image.getexif()
+        
+        if exifdata:
+            print(f"\n메타데이터 확인: {os.path.basename(image_path)}")
+            print("-" * 30)
+            
+            important_tags = ['DateTime', 'DateTimeOriginal', 'DateTimeDigitized', 
+                            'Make', 'Model', 'Software', 'Artist', 'Copyright',
+                            'ExposureTime', 'FNumber', 'ISO', 'FocalLength']
+            
+            found_tags = False
+            for tag, value in exifdata.items():
+                tag_name = TAGS.get(tag, tag)
+                if tag_name in important_tags and value:
+                    print(f"  {tag_name}: {value}")
+                    found_tags = True
+            
+            if not found_tags:
+                print("  주요 메타데이터가 없습니다.")
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(f"메타데이터 확인 오류: {str(e)}")
+        return False
+
 def main():
     # 처리할 폴더 경로 지정
-    input_folder = r"/Users/roger/SynologyDrive/GitHub/alexpecial.github.io/img/fam"   # 원본 이미지 폴더
+    input_folder = r"/Users/roger/SynologyDrive/GitHub/alexpecial.github.io/img/original"   # 원본 이미지 폴더
     output_folder = r"/Users/roger/SynologyDrive/GitHub/alexpecial.github.io/img/fam/processed" # 처리된 이미지 저장 폴더
     
     # 폴더 존재 확인
@@ -265,6 +377,7 @@ def main():
     print("- 최대 파일 크기: 3MB")
     print("- 출력 형식: JPG")
     print("- 파일명 형식: YYYYMMDD.jpg")
+    print("- EXIF 메타데이터: 원본 유지")
     
     response = input("\n처리를 시작하시겠습니까? (y/n): ")
     if response.lower() != 'y':
@@ -273,11 +386,23 @@ def main():
     
     # 이미지 처리 실행
     process_images(input_folder, output_folder)
+    
+    # 메타데이터 검증 옵션
+    response = input("\n처리된 이미지의 메타데이터를 확인하시겠습니까? (y/n): ")
+    if response.lower() == 'y':
+        print("\n처리된 이미지 메타데이터 검증:")
+        print("="*50)
+        
+        output_files = os.listdir(output_folder)[:5]  # 처음 5개만 샘플로 확인
+        for file in output_files:
+            if file.endswith('.jpg'):
+                file_path = os.path.join(output_folder, file)
+                verify_metadata(file_path)
 
 if __name__ == "__main__":
     # 필요한 라이브러리 설치 안내
     print("필요한 라이브러리:")
-    print("pip install Pillow pillow-heif")
+    print("pip install Pillow pillow-heif piexif")
     print("pip install rawpy  # RAW 파일 처리용 (선택사항)")
     print()
     

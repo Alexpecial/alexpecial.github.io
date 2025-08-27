@@ -1,19 +1,11 @@
-# _data/photos.yml
-# 기본 규칙:
-# - base: 원본 이미지 경로 (반드시 존재)
-# - caption: (선택) 캡션
-# - ratio: (선택) CSS aspect-ratio 값. 예: "4 / 3", "3 / 4", "1 / 1".
-#          세로/가로 비율이 제각각이어도 이 값으로 타일 프레임을 제어합니다.
-#          미지정 시 3 / 2 로 렌더됩니다.
-# - thumb800, thumb1200: (선택) 썸네일 경로를 직접 지정하고 싶을 때.
-#          비워두면 base 파일명에서 자동으로 _800, _1200 접미사를 붙여 추론합니다.
-#          (jpg/jpeg/png 지원)
+- base: img/fam/processed/20210424.jpg
+  caption: "주원이가 엄마 뱃속에 있었을 때. 얼마나 나오고 싶었을까? 엄마 배 안에서 계속 지내고 싶었을까? 참 포근하고 좋았지?"
 
-- base: img/fam/photo1.jpg
-  caption: "This is for testThis is for testThis is for testThis is for testThis is for testThis is for testThis is for testThis is for testThis is for testThis is for testThis is for testThis is for testThis is for testThis is for testThis is for testThis is for testThis is for testThis is for testThis is for testThis is for testThis is for testThis is for test"
+- base: img/fam/processed/20210603.jpg
+  caption: "주원아, 아빠 엄마에게 와줘서 고마워. 우리 보물."
 
-- base: img/fam/photo2.jpg
-  caption: "웃음 가득한 날"
+- base: img/fam/processed/20210615_1.jpg
+  caption: "내 손가락을 꽉 잡은 너의 그 손의 온기, 아빠는 잊지 못해."
 
-- base: img/fam/photo3.jpg
-  caption: "저녁 식사 추억"
+- base: img/fam/processed/20220111.jpg
+  caption: "주원아, 네가 두 발로 처음 섰을 때 아빠가 얼마나 기뻤는지 몰라. 주원이가 그 때 아빠 표정을 봤으면 정말 좋았을텐데."
