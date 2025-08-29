@@ -7,6 +7,7 @@ import pillow_heif
 from pathlib import Path
 import numpy as np
 import piexif
+import platform
 
 # HEIC 지원 등록
 pillow_heif.register_heif_opener()
@@ -20,20 +21,62 @@ except ImportError:
     print("경고: rawpy가 설치되지 않았습니다. RAW 파일 처리가 제한될 수 있습니다.")
     print("설치하려면: pip install rawpy")
 
-def get_image_date(image_path):
-    """이미지의 촬영 날짜를 EXIF 데이터에서 추출"""
+def get_file_dates(file_path):
+    """파일의 생성 날짜와 수정 날짜를 가져옴"""
+    stat = os.stat(file_path)
+    
+    # 수정 시간
+    modified_time = stat.st_mtime
+    
+    # 생성 시간 (플랫폼별로 다름)
+    if platform.system() == 'Windows':
+        created_time = stat.st_ctime
+    else:
+        # macOS/Linux에서는 st_birthtime (macOS) 또는 st_ctime (Linux) 사용
+        try:
+            created_time = stat.st_birthtime  # macOS
+        except AttributeError:
+            created_time = stat.st_ctime  # Linux (실제로는 마지막 메타데이터 변경 시간)
+    
+    return created_time, modified_time
+
+def preserve_file_dates(source_path, target_path):
+    """원본 파일의 생성/수정 날짜를 대상 파일에 적용"""
+    stat = os.stat(source_path)
+    
+    # 수정 시간과 접근 시간 설정
+    os.utime(target_path, (stat.st_atime, stat.st_mtime))
+    
+    # Windows에서는 생성 시간도 설정 가능
+    if platform.system() == 'Windows':
+        try:
+            from win32file import CreateFile, SetFileTime, CloseHandle
+            from win32file import GENERIC_WRITE, FILE_SHARE_WRITE, OPEN_EXISTING
+            import pywintypes
+            
+            handle = CreateFile(target_path, GENERIC_WRITE, FILE_SHARE_WRITE, None, OPEN_EXISTING, 0, None)
+            create_time = pywintypes.Time(stat.st_ctime)
+            SetFileTime(handle, create_time, None, None)
+            CloseHandle(handle)
+        except ImportError:
+            pass  # pywin32가 설치되지 않은 경우 생성 시간은 건너뜀
+
+def get_oldest_date_for_filename(file_path):
+    """파일의 EXIF 날짜, 생성 날짜, 수정 날짜 중 가장 오래된 날짜를 반환"""
+    dates = []
+    
+    # 1. EXIF 날짜 시도
     try:
         # RAW 파일인 경우 rawpy로 메타데이터 추출 시도
-        if RAWPY_AVAILABLE and image_path.lower().endswith(('.rw2', '.nef', '.cr2', '.arw', '.dng')):
+        if RAWPY_AVAILABLE and file_path.lower().endswith(('.rw2', '.nef', '.cr2', '.arw', '.dng')):
             try:
-                with rawpy.imread(image_path) as raw:
-                    # rawpy는 직접적인 EXIF 접근이 제한적이므로 PIL로 처리 시도
+                with rawpy.imread(file_path) as raw:
                     rgb = raw.postprocess()
                     image = Image.fromarray(rgb)
             except:
-                image = Image.open(image_path)
+                image = Image.open(file_path)
         else:
-            image = Image.open(image_path)
+            image = Image.open(file_path)
         
         exifdata = image.getexif()
         
@@ -43,20 +86,30 @@ def get_image_date(image_path):
         for tag, value in exifdata.items():
             tag_name = TAGS.get(tag, tag)
             if tag_name in date_tags and value:
-                # 날짜 형식: '2024:09:18 10:30:45' -> '20240918'
                 try:
                     date_obj = datetime.strptime(value.split()[0], '%Y:%m:%d')
-                    return date_obj.strftime('%Y%m%d')
+                    dates.append(date_obj)
                 except:
                     continue
-        
-        # EXIF 데이터가 없으면 파일 수정 날짜 사용
-        mod_time = os.path.getmtime(image_path)
-        return datetime.fromtimestamp(mod_time).strftime('%Y%m%d')
     except:
-        # 오류 발생시 파일 수정 날짜 사용
-        mod_time = os.path.getmtime(image_path)
-        return datetime.fromtimestamp(mod_time).strftime('%Y%m%d')
+        pass
+    
+    # 2. 파일 시스템 날짜 가져오기
+    created_time, modified_time = get_file_dates(file_path)
+    
+    # 생성 날짜 추가
+    dates.append(datetime.fromtimestamp(created_time))
+    
+    # 수정 날짜 추가
+    dates.append(datetime.fromtimestamp(modified_time))
+    
+    # 가장 오래된 날짜 선택
+    if dates:
+        oldest_date = min(dates)
+        return oldest_date.strftime('%Y%m%d')
+    
+    # 날짜가 없으면 현재 날짜 사용 (fallback)
+    return datetime.now().strftime('%Y%m%d')
 
 def get_exif_data(image):
     """이미지에서 EXIF 데이터 추출"""
@@ -253,6 +306,7 @@ def process_images(input_folder, output_folder):
     processed = 0
     errors = []
     metadata_preserved = 0
+    dates_preserved = 0
     
     # 날짜별 파일 카운터
     date_counters = {}
@@ -269,7 +323,7 @@ def process_images(input_folder, output_folder):
     print(f"총 {len(image_files)}개의 이미지 파일을 발견했습니다.")
     if RAWPY_AVAILABLE:
         print("RAW 파일 처리가 활성화되었습니다.")
-    print("EXIF 메타데이터를 보존합니다.")
+    print("EXIF 메타데이터와 파일 날짜를 보존합니다.")
     print("-" * 50)
     
     # 각 이미지 파일 처리
@@ -278,11 +332,17 @@ def process_images(input_folder, output_folder):
             file_name = os.path.basename(file_path)
             print(f"\n처리 중 ({idx}/{len(image_files)}): {file_name}")
             
+            # 원본 파일 날짜 정보 저장
+            created_time, modified_time = get_file_dates(file_path)
+            print(f"  원본 생성일: {datetime.fromtimestamp(created_time).strftime('%Y-%m-%d %H:%M:%S')}")
+            print(f"  원본 수정일: {datetime.fromtimestamp(modified_time).strftime('%Y-%m-%d %H:%M:%S')}")
+            
             # 1. 이미지 열기 (RAW 포함) - EXIF 데이터도 함께 추출
             image, exif_data = open_image_file(file_path)
             
-            # 2. 촬영 날짜 가져오기
-            date_str = get_image_date(file_path)
+            # 2. 가장 오래된 날짜로 파일명 생성
+            date_str = get_oldest_date_for_filename(file_path)
+            print(f"  파일명 날짜: {date_str} (가장 오래된 날짜 사용)")
             
             # 3. 새 파일명 생성
             if date_str not in date_counters:
@@ -303,6 +363,11 @@ def process_images(input_folder, output_folder):
             # 5. 크기 제한으로 저장 (EXIF 데이터 포함)
             save_with_size_limit(optimized_image, new_path, max_size_mb=3, exif_data=exif_data)
             
+            # 6. 원본 파일의 날짜 정보를 새 파일에 적용
+            preserve_file_dates(file_path, new_path)
+            dates_preserved += 1
+            print(f"    파일 날짜 보존: 완료")
+            
             if exif_data:
                 metadata_preserved += 1
             
@@ -318,7 +383,8 @@ def process_images(input_folder, output_folder):
     print("\n" + "="*50)
     print(f"처리 완료!")
     print(f"성공: {processed}개 파일")
-    print(f"메타데이터 보존: {metadata_preserved}개 파일")
+    print(f"EXIF 메타데이터 보존: {metadata_preserved}개 파일")
+    print(f"파일 날짜 보존: {dates_preserved}개 파일")
     print(f"오류: {len(errors)}개 파일")
     print(f"출력 폴더: {output_folder}")
     
@@ -327,15 +393,31 @@ def process_images(input_folder, output_folder):
         for error in errors:
             print(f"  - {error}")
 
-def verify_metadata(image_path):
-    """처리된 이미지의 메타데이터 확인"""
+def verify_metadata_and_dates(image_path, original_path=None):
+    """처리된 이미지의 메타데이터와 날짜 확인"""
     try:
+        print(f"\n검증: {os.path.basename(image_path)}")
+        print("-" * 40)
+        
+        # 파일 날짜 확인
+        created_time, modified_time = get_file_dates(image_path)
+        print(f"파일 생성일: {datetime.fromtimestamp(created_time).strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"파일 수정일: {datetime.fromtimestamp(modified_time).strftime('%Y-%m-%d %H:%M:%S')}")
+        
+        # 원본과 비교 (원본 경로가 제공된 경우)
+        if original_path and os.path.exists(original_path):
+            orig_created, orig_modified = get_file_dates(original_path)
+            if created_time == orig_created and modified_time == orig_modified:
+                print("✓ 파일 날짜가 원본과 동일합니다.")
+            else:
+                print("⚠ 파일 날짜가 원본과 다릅니다.")
+        
+        # EXIF 메타데이터 확인
         image = Image.open(image_path)
         exifdata = image.getexif()
         
         if exifdata:
-            print(f"\n메타데이터 확인: {os.path.basename(image_path)}")
-            print("-" * 30)
+            print("\nEXIF 메타데이터:")
             
             important_tags = ['DateTime', 'DateTimeOriginal', 'DateTimeDigitized', 
                             'Make', 'Model', 'Software', 'Artist', 'Copyright',
@@ -352,15 +434,17 @@ def verify_metadata(image_path):
                 print("  주요 메타데이터가 없습니다.")
             return True
         else:
+            print("EXIF 메타데이터가 없습니다.")
             return False
+            
     except Exception as e:
-        print(f"메타데이터 확인 오류: {str(e)}")
+        print(f"검증 오류: {str(e)}")
         return False
 
 def main():
     # 처리할 폴더 경로 지정
-    input_folder = r"/Users/roger/SynologyDrive/GitHub/alexpecial.github.io/img/original"   # 원본 이미지 폴더
-    output_folder = r"/Users/roger/SynologyDrive/GitHub/alexpecial.github.io/img/fam/processed" # 처리된 이미지 저장 폴더
+    input_folder = r"./original"   # 원본 이미지 폴더
+    output_folder = r"/Users/roger/SynologyDrive/GitHub/alexpecial.github.io/img/fam/processed_2" # 처리된 이미지 저장 폴더
     
     # 폴더 존재 확인
     if not os.path.exists(input_folder):
@@ -376,8 +460,14 @@ def main():
     print("- 최대 이미지 크기: 4096px (긴 쪽 기준)")
     print("- 최대 파일 크기: 3MB")
     print("- 출력 형식: JPG")
-    print("- 파일명 형식: YYYYMMDD.jpg")
+    print("- 파일명 형식: YYYYMMDD.jpg (생성일/수정일 중 오래된 날짜)")
     print("- EXIF 메타데이터: 원본 유지")
+    print("- 파일 생성/수정 날짜: 원본 유지")
+    
+    # Windows에서 pywin32 설치 안내
+    if platform.system() == 'Windows':
+        print("\n※ Windows에서 생성 날짜 보존을 위해 pywin32 설치 권장:")
+        print("  pip install pywin32")
     
     response = input("\n처리를 시작하시겠습니까? (y/n): ")
     if response.lower() != 'y':
@@ -387,23 +477,26 @@ def main():
     # 이미지 처리 실행
     process_images(input_folder, output_folder)
     
-    # 메타데이터 검증 옵션
-    response = input("\n처리된 이미지의 메타데이터를 확인하시겠습니까? (y/n): ")
+    # 메타데이터 및 날짜 검증 옵션
+    response = input("\n처리된 이미지의 메타데이터와 날짜를 확인하시겠습니까? (y/n): ")
     if response.lower() == 'y':
-        print("\n처리된 이미지 메타데이터 검증:")
+        print("\n처리된 이미지 검증:")
         print("="*50)
         
+        # 원본과 처리된 파일 매칭하여 검증
         output_files = os.listdir(output_folder)[:5]  # 처음 5개만 샘플로 확인
         for file in output_files:
             if file.endswith('.jpg'):
                 file_path = os.path.join(output_folder, file)
-                verify_metadata(file_path)
+                verify_metadata_and_dates(file_path)
 
 if __name__ == "__main__":
     # 필요한 라이브러리 설치 안내
     print("필요한 라이브러리:")
     print("pip install Pillow pillow-heif piexif")
     print("pip install rawpy  # RAW 파일 처리용 (선택사항)")
+    if platform.system() == 'Windows':
+        print("pip install pywin32  # Windows에서 생성 날짜 보존용 (선택사항)")
     print()
     
     main()
