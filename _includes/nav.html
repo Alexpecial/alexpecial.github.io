@@ -1,8 +1,8 @@
 <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                data-target="#bs-example-navbar-collapse-1">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -11,58 +11,40 @@
             <a class="navbar-brand page-scroll" href="#page-top">Computational Science Laboratory</a>
         </div>
 
+        <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a id="lang-toggle" onclick="toggleLanguage()">ENG</a>
+                    <a class="page-scroll" href="#professor">Professor</a>
                 </li>
-
-                <li><a class="page-scroll" href="#professor">Professor</a></li>
-                <li><a class="page-scroll" href="#people">People</a></li>
-                <li><a class="page-scroll" href="#research">Research</a></li>
-                <li><a class="page-scroll" href="#publications">Publications</a></li>
-                <li><a class="page-scroll" href="#projects">Projects</a></li>
-                <li><a class="page-scroll" href="#talks">Talks</a></li>
-                <li><a class="page-scroll" href="#contact">Contact</a></li>
                 <li>
-                    <a href="photo.html" id="hidden-photo-link" class="secret-link" aria-hidden="true"
-                        tabindex="-1">P</a>
+                    <a class="page-scroll" href="#people">People</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="#research">Research</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="#publications">Publications</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="#projects">Projects</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="#talks">Talks</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="#contact">Contact</a>
+                </li>
+                <li>
+                    <a href="photo.html"
+                    id="hidden-photo-link"
+                    class="secret-link"
+                    aria-hidden="true"
+                    tabindex="-1">P</a>
                 </li>
             </ul>
         </div>
+        <!-- /.navbar-collapse -->
     </div>
+    <!-- /.container-fluid -->
 </nav>
-
-<script>
-    function setLanguage(lang) {
-        var body = document.body;
-        var btn = document.getElementById('lang-toggle');
-
-        // 기존 클래스 제거 및 새 언어 클래스 추가
-        body.classList.remove('lang-kr', 'lang-en');
-        body.classList.add('lang-' + lang);
-
-        // 로컬 스토리지에 저장 (새로고침 해도 유지되도록)
-        localStorage.setItem('preferred-lang', lang);
-
-        // 버튼 텍스트 변경 (현재 한글이면 -> 영어로 바꾸라는 버튼 표시)
-        if (lang === 'kr') {
-            btn.innerText = 'ENG';
-        } else {
-            btn.innerText = 'KOR';
-        }
-    }
-
-    function toggleLanguage() {
-        var currentLang = document.body.classList.contains('lang-en') ? 'en' : 'kr';
-        var newLang = (currentLang === 'kr') ? 'en' : 'kr';
-        setLanguage(newLang);
-    }
-
-    // 페이지 로드 시 언어 설정 적용
-    document.addEventListener("DOMContentLoaded", function () {
-        // 저장된 언어가 있으면 불러오고, 없으면 'kr'을 기본값으로 사용
-        var savedLang = localStorage.getItem('preferred-lang') || 'kr';
-        setLanguage(savedLang);
-    });
-</script>
