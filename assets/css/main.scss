@@ -1,8 +1,5 @@
----
-# this ensures Jekyll reads the file to be transformed into CSS later
-# only Main files contain this front matter, not partials.
----
-@import 'libs/vars';
+--- # this ensures Jekyll reads the file to be transformed into CSS later # only Main files contain this front matter,
+not partials. --- @import 'libs/vars';
 @import 'libs/functions';
 @import 'libs/mixins';
 @import 'libs/vendor';
@@ -18,37 +15,101 @@
 
 // Breakpoints.
 
-	@include breakpoints((
-		xlarge:   ( 1281px,  1680px ),
-		large:    ( 981px,   1280px ),
-		medium:   ( 737px,   980px  ),
-		small:    ( 481px,   736px  ),
-		xsmall:   ( 361px,   480px  ),
-		xxsmall:  ( null,    360px  )
-	));
+@include breakpoints((xlarge: (1281px, 1680px),
+		large: (981px, 1280px),
+		medium: (737px, 980px),
+		small: (481px, 736px),
+		xsmall: (361px, 480px),
+		xxsmall: (null, 360px)));
 
 // Base.
 
-	@import 'base/reset';
-	@import 'base/page';
-	@import 'base/typography';
+@import 'base/reset';
+@import 'base/page';
+@import 'base/typography';
 
 // Component.
 
-	@import 'components/form';
-	@import 'components/box';
-	@import 'components/icon';
-	@import 'components/image';
-	@import 'components/list';
-	@import 'components/actions';
-	@import 'components/icons';
-	@import 'components/table';
-	@import 'components/button';
+@import 'components/form';
+@import 'components/box';
+@import 'components/icon';
+@import 'components/image';
+@import 'components/list';
+@import 'components/actions';
+@import 'components/icons';
+@import 'components/table';
+@import 'components/button';
 
 // Layout.
 
-	@import 'layout/bg';
-	@import 'layout/wrapper';
-	@import 'layout/header';
-	@import 'layout/main';
-	@import 'layout/footer';
+@import 'layout/bg';
+@import 'layout/wrapper';
+@import 'layout/header';
+@import 'layout/main';
+@import 'layout/footer';
+
+
+/* --- Language Toggle & Visibility Logic --- */
+
+/* 1. Toggle Button Design (Fixed Top-Right) */
+#language-toggle {
+	position: fixed;
+	top: 2rem;
+	right: 2.5rem;
+	z-index: 10000;
+	/* 항상 최상위에 노출 */
+	font-family: "Source Sans Pro", sans-serif;
+	font-size: 0.8rem;
+	font-weight: 300;
+	letter-spacing: 2px;
+	color: rgba(255, 255, 255, 0.4);
+	/* 기본은 흐리게 */
+	user-select: none;
+
+	.lang-btn {
+		cursor: pointer;
+		transition: all 0.3s ease;
+
+		&:hover {
+			color: rgba(255, 255, 255, 1);
+		}
+
+		&.active {
+			color: #ffffff;
+			font-weight: 700;
+			/* 선택된 언어는 진하게 */
+			border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+		}
+	}
+
+	.divider {
+		margin: 0 0.5rem;
+		opacity: 0.3;
+		font-size: 0.7rem;
+	}
+
+	/* 모바일에서는 위치를 약간 조정 */
+	@media screen and (max-width: 736px) {
+		top: 1rem;
+		right: 1rem;
+	}
+}
+
+/* 2. Language Visibility Logic (The Magic) */
+
+/* 기본 상태 (KR 모드): 영어(lang-en)를 숨김 */
+.lang-en {
+	display: none !important;
+}
+
+/* 영어 모드 (body에 class가 붙었을 때): 한글(lang-kr)을 숨기고 영어(lang-en)를 보여줌 */
+body.is-en-mode {
+	.lang-kr {
+		display: none !important;
+	}
+
+	.lang-en {
+		display: inline-block !important;
+		/* 글자 중간에 들어갈 경우를 대비해 inline-block */
+	}
+}
