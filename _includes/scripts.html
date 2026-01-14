@@ -11,3 +11,37 @@
 
 <!-- Custom Theme JavaScript -->
 <script src="js/creative.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // 1. 기본 설정 (한국어 default)
+        var currentLang = localStorage.getItem('preferredLang') || 'ko';
+
+        // 2. 초기 언어 적용 함수
+        function applyLanguage(lang) {
+            if (lang === 'ko') {
+                $('.lang-en').hide();
+                $('.lang-ko').fadeIn(200); // 부드러운 전환
+                $('#btn-ko').addClass('active');
+                $('#btn-en').removeClass('active');
+            } else {
+                $('.lang-ko').hide();
+                $('.lang-en').fadeIn(200);
+                $('#btn-en').addClass('active');
+                $('#btn-ko').removeClass('active');
+            }
+            localStorage.setItem('preferredLang', lang);
+        }
+
+        // 3. 페이지 로드 시 적용
+        applyLanguage(currentLang);
+
+        // 4. 토글 버튼 클릭 이벤트
+        $('#language-toggle').click(function (e) {
+            e.preventDefault();
+            // 현재 ko면 en으로, en이면 ko로 변경
+            currentLang = (currentLang === 'ko') ? 'en' : 'ko';
+            applyLanguage(currentLang);
+        });
+    });
+</script>
