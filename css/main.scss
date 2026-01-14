@@ -1,18 +1,22 @@
---- --- @charset "utf-8";
+---
+---
+
+@charset "utf-8";
 
 // New Professional Color Theme
 // Deep academic purple with gold accents for a sophisticated look
-$theme-primary: #4A148C; // Deep Purple (전문적이고 아카데믹한 느낌)
+$theme-primary: #4A148C;  // Deep Purple (전문적이고 아카데믹한 느낌)
 $theme-secondary: #7B1FA2; // Medium Purple
-$theme-accent: #D4AF37; // Gold accent (품격있는 강조색)
-$theme-dark: #1A1A2E; // Dark Navy (깊이감 있는 다크 톤)
-$theme-light: #F5F3F0; // Warm off-white
-$theme-gray: #6C757D; // Neutral gray
-$theme-success: #00897B; // Teal for success states
+$theme-accent: #D4AF37;    // Gold accent (품격있는 강조색)
+$theme-dark: #1A1A2E;      // Dark Navy (깊이감 있는 다크 톤)
+$theme-light: #F5F3F0;     // Warm off-white
+$theme-gray: #6C757D;      // Neutral gray
+$theme-success: #00897B;   // Teal for success states
 
 // Import partials from `sass_dir` (defaults to `_sass`)
-@import "mixins",
-"base"
+@import
+        "mixins",
+        "base"
 ;
 
 // Additional global styles for improved typography and spacing
@@ -38,12 +42,12 @@ body {
     border-radius: 8px;
     padding: 2rem;
     margin-bottom: 2rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-
+    
     &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
     }
 }
 
@@ -63,7 +67,7 @@ body {
 .timeline {
     position: relative;
     padding-left: 2rem;
-
+    
     &:before {
         content: '';
         position: absolute;
@@ -73,11 +77,11 @@ body {
         width: 2px;
         background: linear-gradient(to bottom, $theme-primary, $theme-secondary);
     }
-
+    
     .timeline-item {
         position: relative;
         padding-bottom: 1.5rem;
-
+        
         &:before {
             content: '';
             position: absolute;
@@ -94,41 +98,13 @@ body {
 }
 
 /* 부트스트랩 네비 항목을 그대로 유지하되, 완전 투명 처리 */
-.navbar-nav>li>a.secret-link {
-    opacity: 0;
-    /* 보이진 않지만 클릭 가능 */
-    pointer-events: auto;
-    /* 명시(기본값이지만 안전) */
+.navbar-nav > li > a.secret-link {
+  opacity: 0;             /* 보이진 않지만 클릭 가능 */
+  pointer-events: auto;    /* 명시(기본값이지만 안전) */
 }
 
 /* 호버/포커스 시에도 계속 투명하게 */
-.navbar-nav>li>a.secret-link:hover,
-.navbar-nav>li>a.secret-link:focus {
-    opacity: 0;
-}
-
-// Language Toggle Styles
-.lang-en {
-    display: none; // 기본적으로 영어 숨김
-}
-
-.lang-ko {
-    display: inline-block; // 기본적으로 한국어 보임 (상황에 따라 block으로 변경 가능)
-}
-
-// 토글 버튼 스타일
-.lang-toggle-btn {
-    cursor: pointer !important;
-    font-weight: 800;
-
-    span {
-        opacity: 0.5;
-        transition: opacity 0.3s;
-
-        &.active {
-            opacity: 1;
-            color: $theme-primary; // 기존 테마의 보라색 강조
-            border-bottom: 2px solid $theme-accent; // 골드색 밑줄
-        }
-    }
+.navbar-nav > li > a.secret-link:hover,
+.navbar-nav > li > a.secret-link:focus {
+  opacity: 0;
 }
