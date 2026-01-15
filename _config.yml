@@ -1,8 +1,11 @@
 # Site settings
-title: Computational Science Laboratory
+title_ko: 컴퓨테이셔널 사이언스 연구실  # 한글 제목 (기본)
+title_en: Computational Science Laboratory  # 영어 제목
+description_ko: 인천대학교  # 한글 설명 (기본)
+description_en: Incheon National University  # 영어 설명
 email: hmwoo@inu.ac.kr
 # description: A fully responsive site template designed by <a href="https://html5up.net">HTML5 UP</a> and released<br />for free under the <a href="https://html5up.net/license">Creative Commons</a> license.
-description: Incheon National University
+# description: Incheon National University
 baseurl: "/" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site
 author: Hyun-Myung Woo
