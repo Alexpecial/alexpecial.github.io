@@ -411,11 +411,10 @@
 		var $langToggle = $('#lang-toggle');
 		var $siteTitle = $('#site-title');
 		var $siteDesc = $('#site-desc');
-		// MODIFIED: inline siteData 사용 (liquid 직접 사용 피함)
-		var titleKo = siteData.titleKo || '컴퓨테이셔널 사이언스 연구실';  // fallback
-		var titleEn = siteData.titleEn || 'Computational Science Laboratory';
-		var descKo = siteData.descKo || '인천대학교';
-		var descEn = siteData.descEn || 'Incheon National University';
+		var titleKo = '{{ site.title_ko }}';  // Jekyll에서 렌더링된 값 사용 (실제 빌드 시 치환됨)
+		var titleEn = '{{ site.title_en }}';
+		var descKo = '{{ site.description_ko }}';
+		var descEn = '{{ site.description_en }}';
 
 		function toggleLanguage() {
 			if (currentLang === 'ko') {
@@ -443,14 +442,6 @@
 
 		// 버튼 클릭 이벤트
 		$langToggle.on('click', toggleLanguage);
-
-		// MODIFIED: 에러 핸들링 추가 (콘솔 로그로 디버그)
-		try {
-			// 기존 초기화 코드 (e.g., $main._show 등)
-		} catch (error) {
-			console.error('JS Error:', error);
-			$body.removeClass('is-loading');  // 강제 해제
-		}
 
 	});
 
