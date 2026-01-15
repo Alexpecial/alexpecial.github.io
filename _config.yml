@@ -1,29 +1,29 @@
 # Site settings
-title: Dimension
-email: youremailaddress@gmail.com
+title: Computational Science Laboratory
+email: hmwoo@inu.ac.kr
 description: A fully responsive site template designed by <a href="https://html5up.net">HTML5 UP</a> and released<br />for free under the <a href="https://html5up.net/license">Creative Commons</a> license.
 baseurl: "/" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site
-author:
-street_address: 1234 Somewhere Road
-city: Nashville
-state: TN
-zip_code: 55555
-country: United States of America
-phone: (716) 555-5555
+author: Hyun-Myung Woo
+street_address: 119 Academy-ro
+city: Incheon
+state: Incheon
+zip_code: 22012
+country: South Korea
+# phone: +82-32-800-5114
 
 icon: fa-diamond # Font Awesome class for your site's icon
 
 # Social settings
 facebook_url:
 github_url:
-gitlab_url: https://gitlab.com/u/andrewbanchich
-googleplus_url: https://plus.google.com/u/0/+AndrewBanchich
-instagram_url:
-linkedin_url: https://www.linkedin.com/in/andrew-banchich-a4ba1195
-pinterest_url:
-slack_url:
-twitter_url: https://twitter.com/andrewbanchich
+gitlab_url: https://github.com/Alexpecial
+# googleplus_url: https://plus.google.com/u/0/+AndrewBanchich
+# instagram_url:
+# linkedin_url: https://www.linkedin.com/in/larcwind
+# pinterest_url:
+# slack_url:
+# twitter_url: https://twitter.com/andrewbanchich
 
 # Build settings
 markdown: kramdown
