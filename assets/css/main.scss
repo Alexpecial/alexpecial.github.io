@@ -1,8 +1,5 @@
----
-# this ensures Jekyll reads the file to be transformed into CSS later
-# only Main files contain this front matter, not partials.
----
-@import 'libs/vars';
+--- # this ensures Jekyll reads the file to be transformed into CSS later # only Main files contain this front matter,
+not partials. --- @import 'libs/vars';
 @import 'libs/functions';
 @import 'libs/mixins';
 @import 'libs/vendor';
@@ -18,37 +15,85 @@
 
 // Breakpoints.
 
-	@include breakpoints((
-		xlarge:   ( 1281px,  1680px ),
-		large:    ( 981px,   1280px ),
-		medium:   ( 737px,   980px  ),
-		small:    ( 481px,   736px  ),
-		xsmall:   ( 361px,   480px  ),
-		xxsmall:  ( null,    360px  )
-	));
+@include breakpoints((xlarge: (1281px, 1680px),
+		large: (981px, 1280px),
+		medium: (737px, 980px),
+		small: (481px, 736px),
+		xsmall: (361px, 480px),
+		xxsmall: (null, 360px)));
 
 // Base.
 
-	@import 'base/reset';
-	@import 'base/page';
-	@import 'base/typography';
+@import 'base/reset';
+@import 'base/page';
+@import 'base/typography';
 
 // Component.
 
-	@import 'components/form';
-	@import 'components/box';
-	@import 'components/icon';
-	@import 'components/image';
-	@import 'components/list';
-	@import 'components/actions';
-	@import 'components/icons';
-	@import 'components/table';
-	@import 'components/button';
+@import 'components/form';
+@import 'components/box';
+@import 'components/icon';
+@import 'components/image';
+@import 'components/list';
+@import 'components/actions';
+@import 'components/icons';
+@import 'components/table';
+@import 'components/button';
 
 // Layout.
 
-	@import 'layout/bg';
-	@import 'layout/wrapper';
-	@import 'layout/header';
-	@import 'layout/main';
-	@import 'layout/footer';
+@import 'layout/bg';
+@import 'layout/wrapper';
+@import 'layout/header';
+@import 'layout/main';
+@import 'layout/footer';
+
+// MODIFIED: 언어 토글 스타일 추가
+.lang-switch {
+	@include vendor('transition', 'background-color #{_duration(transition)} ease-in-out, color #{_duration(transition)} ease-in-out');
+	background-color: transparent;
+	border-radius: _size(border-radius);
+	border: solid _size(border-width) _palette(border);
+	color: _palette(fg-bold) !important;
+	cursor: pointer;
+	display: inline-block;
+	font-size: 0.7rem; // 작게 유지하여 레이아웃 영향 최소화
+	font-weight: _font(weight);
+	height: 2rem;
+	line-height: 2rem;
+	padding: 0 0.75rem;
+	text-align: center;
+	text-transform: uppercase;
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+	z-index: 10; // 헤더 위에 오버레이
+
+	&:hover {
+		background-color: _palette(border-bg);
+	}
+
+	&:active {
+		background-color: _palette(border-bg-alt);
+	}
+
+	@include breakpoint('<=small') {
+		top: 0.5rem;
+		right: 0.5rem;
+		font-size: 0.6rem;
+		height: 1.75rem;
+		line-height: 1.75rem;
+		padding: 0 0.5rem;
+	}
+}
+
+// MODIFIED: 콘텐츠 transition 추가 (자연스러운 변경)
+.lang-content {
+	@include vendor('transition', 'opacity 0.3s ease-in-out');
+	opacity: 1;
+
+	&.hidden {
+		opacity: 0;
+		display: none;
+	}
+}

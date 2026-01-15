@@ -2,27 +2,29 @@
 <div id="wrapper">
 
 	<!-- Header -->
-		<header id="header">
-			<div class="logo">
-				<span class="icon {{ site.icon }}"></span>
+	<header id="header">
+		<div class="logo">
+			<span class="icon {{ site.icon }}"></span>
+		</div>
+		<div class="content">
+			<div class="inner">
+				<h1 id="site-title">{{ site.title_ko }}</h1> <!-- MODIFIED: id 추가, 기본 ko -->
+				<p id="site-desc">{{ site.description_ko }}</p> <!-- MODIFIED: id 추가, 기본 ko -->
 			</div>
-			<div class="content">
-				<div class="inner">
-					<h1>{{ site.title }}</h1>
-					<p>{{ site.description }}</p>
-				</div>
-			</div>
-			<nav>
-				<ul>
-					{% for page in site.pages  %}
-					{% if page.title %}
-					<!-- page.path is: {{ page.path }} -->
-					<li><a href="#{{ page.title }}">{{ page.title }}</a></li>
-					{% endif %}
-					{% endfor %}
-				</ul>
-			</nav>
-		</header>
+		</div>
+		<nav>
+			<ul>
+				{% for page in site.pages %}
+				{% if page.title %}
+				<!-- page.path is: {{ page.path }} -->
+				<li><a href="#{{ page.title }}">{{ page.title }}</a></li>
+				{% endif %}
+				{% endfor %}
+			</ul>
+		</nav>
+		<!-- MODIFIED: 언어 토글 버튼 추가 (absolute positioning) -->
+		<div id="lang-toggle" class="lang-switch">KO</div>
+	</header>
 
 	<!-- Main -->
-		<div id="main">
+	<div id="main">
