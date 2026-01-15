@@ -1,7 +1,8 @@
 # Site settings
 title: Computational Science Laboratory
 email: hmwoo@inu.ac.kr
-description: A fully responsive site template designed by <a href="https://html5up.net">HTML5 UP</a> and released<br />for free under the <a href="https://html5up.net/license">Creative Commons</a> license.
+# description: A fully responsive site template designed by <a href="https://html5up.net">HTML5 UP</a> and released<br />for free under the <a href="https://html5up.net/license">Creative Commons</a> license.
+description: Incheon National University
 baseurl: "/" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site
 author: Hyun-Myung Woo
@@ -12,7 +13,7 @@ zip_code: 22012
 country: South Korea
 # phone: +82-32-800-5114
 
-icon: fa-diamond # Font Awesome class for your site's icon
+icon: fa-laptop # Font Awesome class for your site's icon
 
 # Social settings
 facebook_url:
