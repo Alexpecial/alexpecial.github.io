@@ -1,6 +1,7 @@
 ---
 title: Professor
 image: pic03.jpg
+order: 1
 ---
 
 <section>
