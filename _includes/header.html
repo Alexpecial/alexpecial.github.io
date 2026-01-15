@@ -2,27 +2,29 @@
 <div id="wrapper">
 
 	<!-- Header -->
-		<header id="header">
-			<div class="logo">
-				<span class="icon {{ site.icon }}"></span>
+	<header id="header">
+		<div class="logo">
+			<span class="icon {{ site.icon }}"></span>
+		</div>
+		<div class="content">
+			<div class="inner">
+				<h1>{{ site.title }}</h1>
+				<p>{{ site.description }}</p>
 			</div>
-			<div class="content">
-				<div class="inner">
-					<h1>{{ site.title }}</h1>
-					<p>{{ site.description }}</p>
-				</div>
-			</div>
+		</div>
+		<nav>
 			<nav>
 				<ul>
-					{% for page in site.pages  %}
+					{% assign sorted_pages = site.pages | sort: "order" %} <!-- 이 줄 필수 -->
+					{% for page in sorted_pages %} <!-- site.pages 대신 sorted_pages 사용 -->
 					{% if page.title %}
-					<!-- page.path is: {{ page.path }} -->
 					<li><a href="#{{ page.title }}">{{ page.title }}</a></li>
 					{% endif %}
 					{% endfor %}
 				</ul>
 			</nav>
-		</header>
+		</nav>
+	</header>
 
 	<!-- Main -->
-		<div id="main">
+	<div id="main">
