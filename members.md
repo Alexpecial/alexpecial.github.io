@@ -18,26 +18,26 @@ order: 2
 	<hr />
 
 	<h3 class="major">M.S. Students</h3>
-	<ul class="alt">
+	<ul>
 		<li><strong>장태영</strong></li>
 	</ul>
 
 	<h3 class="major">Undergraduate Researchers</h3>
-	<ul class="alt">
+	<ul>
 		<li><strong>박윤상</strong></li>
 		<li><strong>김찬회</strong></li>
 		<li><strong>이윤우</strong></li>
 	</ul>
 
 	<hr />
-<h3 class="major">Alumni</h3>
-	<ul class="alt">
+
+	<h3 class="major">Alumni</h3>
+	<ul>
 		<li>
-			<strong>염주현</strong> (M.S. Student, Yonsei University)<br>
-			
+			<strong>염주현</strong> (M.S. Student, Yonsei University)
 		</li>
 		<li>
-			<strong>한지호</strong> (Hanwha Robotics Bootcamp)<br>
+			<strong>한지호</strong> (Hanwha Robotics Bootcamp)
 		</li>
 	</ul>
 </section>
