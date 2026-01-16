@@ -1,8 +1,5 @@
----
-# this ensures Jekyll reads the file to be transformed into CSS later
-# only Main files contain this front matter, not partials.
----
-@import 'libs/vars';
+--- # this ensures Jekyll reads the file to be transformed into CSS later # only Main files contain this front matter,
+not partials. --- @import 'libs/vars';
 @import 'libs/functions';
 @import 'libs/mixins';
 @import 'libs/vendor';
@@ -18,37 +15,106 @@
 
 // Breakpoints.
 
-	@include breakpoints((
-		xlarge:   ( 1281px,  1680px ),
-		large:    ( 981px,   1280px ),
-		medium:   ( 737px,   980px  ),
-		small:    ( 481px,   736px  ),
-		xsmall:   ( 361px,   480px  ),
-		xxsmall:  ( null,    360px  )
-	));
+@include breakpoints((xlarge: (1281px, 1680px),
+		large: (981px, 1280px),
+		medium: (737px, 980px),
+		small: (481px, 736px),
+		xsmall: (361px, 480px),
+		xxsmall: (null, 360px)));
 
 // Base.
 
-	@import 'base/reset';
-	@import 'base/page';
-	@import 'base/typography';
+@import 'base/reset';
+@import 'base/page';
+@import 'base/typography';
 
 // Component.
 
-	@import 'components/form';
-	@import 'components/box';
-	@import 'components/icon';
-	@import 'components/image';
-	@import 'components/list';
-	@import 'components/actions';
-	@import 'components/icons';
-	@import 'components/table';
-	@import 'components/button';
+@import 'components/form';
+@import 'components/box';
+@import 'components/icon';
+@import 'components/image';
+@import 'components/list';
+@import 'components/actions';
+@import 'components/icons';
+@import 'components/table';
+@import 'components/button';
 
 // Layout.
 
-	@import 'layout/bg';
-	@import 'layout/wrapper';
-	@import 'layout/header';
-	@import 'layout/main';
-	@import 'layout/footer';
+@import 'layout/bg';
+@import 'layout/wrapper';
+@import 'layout/header';
+@import 'layout/main';
+@import 'layout/footer';
+
+/* ==========================================================================
+   Language Toggle & Visibility Logic (Custom Added)
+   ========================================================================== */
+
+/* 1. Toggle Button Style */
+#lang-toggle {
+	position: fixed;
+	top: 2.5rem;
+	/* Distance from top */
+	right: 2.5rem;
+	/* Distance from right */
+	z-index: 10000;
+	/* Ensure it stays above everything (modal/bg) */
+	color: #ffffff;
+	font-family: "Source Sans Pro", sans-serif;
+	font-weight: 300;
+	/* Light font */
+	font-size: 0.85rem;
+	letter-spacing: 0.15rem;
+	cursor: pointer;
+	user-select: none;
+	mix-blend-mode: difference;
+	/* Optional: ensures visibility on light/dark bg */
+
+	span {
+		transition: all 0.3s ease;
+	}
+
+	.divider {
+		opacity: 0.4;
+		margin: 0 0.3rem;
+		font-weight: 100;
+	}
+
+	.active {
+		opacity: 1.0;
+		font-weight: 600;
+		/* Highlight selected */
+		border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+		/* Subtle underline */
+	}
+
+	.inactive {
+		opacity: 0.5;
+		/* Transparent white */
+	}
+
+	&:hover .inactive {
+		opacity: 0.8;
+	}
+}
+
+/* Mobile adjustments for toggle */
+@media screen and (max-width: 736px) {
+	#lang-toggle {
+		top: 1.5rem;
+		right: 1.5rem;
+	}
+}
+
+/* 2. Content Visibility Logic */
+/* If body has class 'lang-kr', hide English elements */
+body.lang-kr .lang-en {
+	display: none !important;
+}
+
+/* If body has class 'lang-en', hide Korean elements */
+body.lang-en .lang-kr {
+	display: none !important;
+}
