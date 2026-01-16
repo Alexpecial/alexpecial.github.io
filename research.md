@@ -7,7 +7,7 @@ order: 3
 <section>
 	<h3 class="major">Overview</h3>
 	<blockquote>
-		저희 연구실은 기계 학습, 최적화, 과학적 발견의 교차점에서 혁신적인 계산 방법을 개발하는 데 중점을 둡니다. 복잡한 과학 영역에서 자율적으로 최적의 의사 결정을 내릴 수 있는 지능형 시스템을 만드는 것을 목표로 합니다.
+		우리 연구실은 기계 학습, 최적화, 과학적 발견의 교차점에서 혁신적인 계산 방법을 개발하는 데 중점을 둡니다. 복잡한 과학 영역에서 자율적으로 최적의 의사 결정을 내릴 수 있는 지능형 시스템을 만드는 것을 목표로 합니다.
 		<br>
 		<small style="color:#666;">
 		Our research focuses on developing innovative computational methods at the intersection of machine learning, optimization, and scientific discovery. We aim to create intelligent systems that can autonomously make optimal decisions in complex scientific domains.
@@ -20,7 +20,7 @@ order: 3
 
 	<h4>I. 베이지안 딥러닝 및 불확실성 정량화<br><small style="color:#666;">Bayesian Deep Learning and Uncertainty Quantification</small></h4>
 	<p>
-		딥러닝 모델의 불확실성을 원칙적으로 표현하여 정확하면서도 자신의 신뢰도를 인지하는 시스템을 개발하는 데 주력합니다.
+		딥러닝 모델의 불확실성을 원칙적으로 표현하여 정확하면서도 자신의 신뢰도를 인지하는 시스템 개발
 		<br>
 		<small style="color:#666;">We focus on the principled representation of uncertainty in deep learning models to develop systems that are accurate and aware of their own confidence.</small>
 	</p>
@@ -56,7 +56,7 @@ order: 3
 
 	<h4>II. 최적 의사 결정 및 자동화된 과학적 발견<br><small style="color:#666;">Optimal Decision-Making and Automated Scientific Discovery</small></h4>
 	<p>
-		딥러닝, 강화 학습, 고전적 최적화 이론을 통합하여 고차원 공간에서 과학적 탐구를 가이드합니다.
+		딥러닝, 강화 학습, 고전적 최적화 이론을 통합하여 고차원 공간에서 과학적 탐구 가속화
 		<br>
 		<small style="color:#666;">We integrate deep learning, reinforcement learning, and classical optimization to guide scientific campaigns in high-dimensional spaces.</small>
 	</p>
