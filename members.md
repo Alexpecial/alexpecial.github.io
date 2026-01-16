@@ -14,16 +14,6 @@ order: 2
 			<li><a href="mailto:hmwoo@inu.ac.kr" class="button primary icon fa-envelope">Contact Us for Opportunities</a></li>
 		</ul>
 	</div>
-	
-	<h4 class="major">Research Areas</h4>
-	<ul>
-		<li>Deep Learning</li>
-		<li>Optimal Experimental Design</li>
-		<li>Bayesian Methods</li>
-		<li>Reinforcement Learning</li>
-		<li>Bioinformatics</li>
-		<li>Computational Materials Science</li>
-	</ul>
 
 	<hr />
 
@@ -31,10 +21,7 @@ order: 2
 	<div class="row">
 		<div class="col-6 col-12-small">
 			<h4><strong>장태영</strong></h4>
-			<ul>
-				<li>Optimal Computational Campaign</li>
-				<li>Bioinformatics</li>
-			</ul>
+			<p>Optimal Computational Campaign · Bioinformatics</p>
 		</div>
 	</div>
 
@@ -44,24 +31,15 @@ order: 2
 	<div class="row">
 		<div class="col-6 col-12-small">
 			<h4><strong>박윤상</strong></h4>
-			<ul>
-				<li>Semi-supervised Learning</li>
-				<li>Deep Learning</li>
-			</ul>
+			<p>Semi-supervised Learning · Deep Learning</p>
 		</div>
 		<div class="col-6 col-12-small">
 			<h4><strong>김찬회</strong></h4>
-			<ul>
-				<li>Multi-task Learning</li>
-                <li>Biomedical Image Analysis</li>
-			</ul>
+			<p>Multi-task Learning · Biomedical Image Analysis</p>
 		</div>
 		<div class="col-6 col-12-small">
 			<h4><strong>이윤우</strong></h4>
-			<ul>
-                <li>Deep Learning</li>
-				<li>Robotics</li>
-			</ul>
+			<p>Deep Learning · Robotics</p>
 		</div>
 	</div>
 
@@ -74,7 +52,7 @@ order: 2
 
 	<h3 class="major">Alumni</h3>
 	<div class="table-wrapper">
-		<table class="alt">
+		<table>
 			<thead>
 				<tr>
 					<th>Name</th>
