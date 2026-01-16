@@ -18,30 +18,16 @@ order: 2
 	<hr />
 
 	<h3 class="major">M.S. Students</h3>
-	<div class="row">
-		<div class="col-6 col-12-small">
-			<h4><strong>장태영</strong></h4>
-			<p>Optimal Computational Campaign · Bioinformatics</p>
-		</div>
-	</div>
-
-	<hr />
+	<ul class="alt">
+		<li><strong>장태영</strong></li>
+	</ul>
 
 	<h3 class="major">Undergraduate Researchers</h3>
-	<div class="row">
-		<div class="col-6 col-12-small">
-			<h4><strong>박윤상</strong></h4>
-			<p>Semi-supervised Learning · Deep Learning</p>
-		</div>
-		<div class="col-6 col-12-small">
-			<h4><strong>김찬회</strong></h4>
-			<p>Multi-task Learning · Biomedical Image Analysis</p>
-		</div>
-		<div class="col-6 col-12-small">
-			<h4><strong>이윤우</strong></h4>
-			<p>Deep Learning · Robotics</p>
-		</div>
-	</div>
+	<ul class="alt">
+		<li><strong>박윤상</strong></li>
+		<li><strong>김찬회</strong></li>
+		<li><strong>이윤우</strong></li>
+	</ul>
 
 	<hr />
 
@@ -57,7 +43,7 @@ order: 2
 				<tr>
 					<th>Name</th>
 					<th>Degree / Year</th>
-					<th>Current Position</th>
+					<th>First Position</th>
 				</tr>
 			</thead>
 			<tbody>
