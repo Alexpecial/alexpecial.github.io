@@ -30,34 +30,15 @@ order: 2
 	</ul>
 
 	<hr />
-
-	<h3 class="major">Ph.D. Students</h3>
-	<p><em>Coming Soon</em></p>
-
-	<hr />
-
-	<h3 class="major">Alumni</h3>
-	<div class="table-wrapper">
-		<table>
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Degree / Year</th>
-					<th>First Position</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>염주현</td>
-					<td>B.A. 2026</td>
-					<td>M.S. Student, Yonsei University</td>
-				</tr>
-				<tr>
-					<td>한지호</td>
-					<td>B.A. 2026</td>
-					<td>Hanwha Robotics Bootcamp</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+<h3 class="major">Alumni</h3>
+	<ul class="alt">
+		<li>
+			<strong>염주현</strong><br>
+			M.S. Student, Yonsei University
+		</li>
+		<li>
+			<strong>한지호</strong><br>
+			Hanwha Robotics Bootcamp
+		</li>
+	</ul>
 </section>
