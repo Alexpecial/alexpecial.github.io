@@ -16,7 +16,7 @@ order: 2
 	</div>
 	
 	<h4 class="major">Research Areas</h4>
-	<ul class="alt">
+	<ul>
 		<li>Deep Learning</li>
 		<li>Optimal Experimental Design</li>
 		<li>Bayesian Methods</li>
@@ -30,15 +30,11 @@ order: 2
 	<h3 class="major">M.S. Students</h3>
 	<div class="row">
 		<div class="col-6 col-12-small">
-			<h4>장태영/h4>
-			<ul class="alt">
+			<h4><strong>장태영</strong></h4>
+			<ul>
 				<li>Optimal Computational Campaign</li>
 				<li>Bioinformatics</li>
 			</ul>
-			<!-- <ul class="icons">
-				<li><a href="#" class="icon fa-envelope"><span class="label">Email</span></a></li>
-				<li><a href="#" class="icon fa-linkedin"><span class="label">LinkedIn</span></a></li>
-			</ul> -->
 		</div>
 	</div>
 
@@ -47,37 +43,25 @@ order: 2
 	<h3 class="major">Undergraduate Researchers</h3>
 	<div class="row">
 		<div class="col-6 col-12-small">
-			<h4>박윤상</h4>
-			<ul class="alt">
+			<h4><strong>박윤상</strong></h4>
+			<ul>
 				<li>Semi-supervised Learning</li>
 				<li>Deep Learning</li>
 			</ul>
-			<!-- <ul class="icons">
-				<li><a href="#" class="icon fa-envelope"><span class="label">Email</span></a></li>
-				<li><a href="#" class="icon fa-linkedin"><span class="label">LinkedIn</span></a></li>
-			</ul> -->
 		</div>
 		<div class="col-6 col-12-small">
-			<h4>김찬회</h4>
-			<ul class="alt">
+			<h4><strong>김찬회</strong></h4>
+			<ul>
 				<li>Multi-task Learning</li>
                 <li>Biomedical Image Analysis</li>
 			</ul>
-			<!-- <ul class="icons">
-				<li><a href="#" class="icon fa-envelope"><span class="label">Email</span></a></li>
-				<li><a href="#" class="icon fa-linkedin"><span class="label">LinkedIn</span></a></li>
-			</ul> -->
 		</div>
 		<div class="col-6 col-12-small">
-			<h4>이윤우</h4>
-			<ul class="alt">
+			<h4><strong>이윤우</strong></h4>
+			<ul>
                 <li>Deep Learning</li>
 				<li>Robotics</li>
 			</ul>
-			<!-- <ul class="icons">
-				<li><a href="#" class="icon fa-envelope"><span class="label">Email</span></a></li>
-				<li><a href="#" class="icon fa-linkedin"><span class="label">LinkedIn</span></a></li>
-			</ul> -->
 		</div>
 	</div>
 
