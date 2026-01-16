@@ -33,12 +33,11 @@ order: 2
 <h3 class="major">Alumni</h3>
 	<ul class="alt">
 		<li>
-			<strong>염주현</strong><br>
-			M.S. Student, Yonsei University
+			<strong>염주현</strong> (M.S. Student, Yonsei University)<br>
+			
 		</li>
 		<li>
-			<strong>한지호</strong><br>
-			Hanwha Robotics Bootcamp
+			<strong>한지호</strong> (Hanwha Robotics Bootcamp)<br>
 		</li>
 	</ul>
 </section>
