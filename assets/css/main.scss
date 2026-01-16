@@ -1,5 +1,8 @@
---- # this ensures Jekyll reads the file to be transformed into CSS later # only Main files contain this front matter,
-not partials. --- @import 'libs/vars';
+---
+# this ensures Jekyll reads the file to be transformed into CSS later
+# only Main files contain this front matter, not partials.
+---
+@import 'libs/vars';
 @import 'libs/functions';
 @import 'libs/mixins';
 @import 'libs/vendor';
@@ -15,76 +18,37 @@ not partials. --- @import 'libs/vars';
 
 // Breakpoints.
 
-@include breakpoints((xlarge: (1281px, 1680px),
-		large: (981px, 1280px),
-		medium: (737px, 980px),
-		small: (481px, 736px),
-		xsmall: (361px, 480px),
-		xxsmall: (null, 360px)));
+	@include breakpoints((
+		xlarge:   ( 1281px,  1680px ),
+		large:    ( 981px,   1280px ),
+		medium:   ( 737px,   980px  ),
+		small:    ( 481px,   736px  ),
+		xsmall:   ( 361px,   480px  ),
+		xxsmall:  ( null,    360px  )
+	));
 
 // Base.
 
-@import 'base/reset';
-@import 'base/page';
-@import 'base/typography';
+	@import 'base/reset';
+	@import 'base/page';
+	@import 'base/typography';
 
 // Component.
 
-@import 'components/form';
-@import 'components/box';
-@import 'components/icon';
-@import 'components/image';
-@import 'components/list';
-@import 'components/actions';
-@import 'components/icons';
-@import 'components/table';
-@import 'components/button';
+	@import 'components/form';
+	@import 'components/box';
+	@import 'components/icon';
+	@import 'components/image';
+	@import 'components/list';
+	@import 'components/actions';
+	@import 'components/icons';
+	@import 'components/table';
+	@import 'components/button';
 
 // Layout.
 
-@import 'layout/bg';
-@import 'layout/wrapper';
-@import 'layout/header';
-@import 'layout/main';
-@import 'layout/footer';
-
-// Language Toggle Styles
-#lang-toggle {
-	position: fixed;
-	top: 20px;
-	right: 20px;
-	z-index: 10000; // Ensure always on top
-	font-family: 'Source Sans Pro', sans-serif;
-	font-weight: 300; // Light font
-	color: rgba(255, 255, 255, 0.7); // White with 70% opacity
-	background: none;
-	border: none;
-	font-size: 1em;
-	cursor: pointer;
-	user-select: none;
-}
-
-#lang-toggle .active-lang {
-	font-weight: 600; // Slightly bolder for active
-}
-
-#lang-toggle .inactive-lang {
-	opacity: 0.5;
-}
-
-// Language Content Switch
-.lang-content.kr {
-	display: block; // Default: KR visible
-}
-
-.lang-content.en {
-	display: none;
-}
-
-body.lang-en .lang-content.kr {
-	display: none;
-}
-
-body.lang-en .lang-content.en {
-	display: block;
-}
+	@import 'layout/bg';
+	@import 'layout/wrapper';
+	@import 'layout/header';
+	@import 'layout/main';
+	@import 'layout/footer';
