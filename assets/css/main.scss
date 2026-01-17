@@ -1,8 +1,5 @@
----
-# this ensures Jekyll reads the file to be transformed into CSS later
-# only Main files contain this front matter, not partials.
----
-@import 'libs/vars';
+--- # this ensures Jekyll reads the file to be transformed into CSS later # only Main files contain this front matter,
+not partials. --- @import 'libs/vars';
 @import 'libs/functions';
 @import 'libs/mixins';
 @import 'libs/vendor';
@@ -18,37 +15,89 @@
 
 // Breakpoints.
 
-	@include breakpoints((
-		xlarge:   ( 1281px,  1680px ),
-		large:    ( 981px,   1280px ),
-		medium:   ( 737px,   980px  ),
-		small:    ( 481px,   736px  ),
-		xsmall:   ( 361px,   480px  ),
-		xxsmall:  ( null,    360px  )
-	));
+@include breakpoints((xlarge: (1281px, 1680px),
+		large: (981px, 1280px),
+		medium: (737px, 980px),
+		small: (481px, 736px),
+		xsmall: (361px, 480px),
+		xxsmall: (null, 360px)));
 
 // Base.
 
-	@import 'base/reset';
-	@import 'base/page';
-	@import 'base/typography';
+@import 'base/reset';
+@import 'base/page';
+@import 'base/typography';
 
 // Component.
 
-	@import 'components/form';
-	@import 'components/box';
-	@import 'components/icon';
-	@import 'components/image';
-	@import 'components/list';
-	@import 'components/actions';
-	@import 'components/icons';
-	@import 'components/table';
-	@import 'components/button';
+@import 'components/form';
+@import 'components/box';
+@import 'components/icon';
+@import 'components/image';
+@import 'components/list';
+@import 'components/actions';
+@import 'components/icons';
+@import 'components/table';
+@import 'components/button';
 
 // Layout.
 
-	@import 'layout/bg';
-	@import 'layout/wrapper';
-	@import 'layout/header';
-	@import 'layout/main';
-	@import 'layout/footer';
+@import 'layout/bg';
+@import 'layout/wrapper';
+@import 'layout/header';
+@import 'layout/main';
+@import 'layout/footer';
+
+
+/* --- Language Toggle & Logic (Added) --- */
+
+#lang-toggle {
+	position: fixed;
+	top: 1.5rem;
+	right: 1.5rem;
+	z-index: 10001;
+	/* Higher than Wrapper/Overlay */
+	color: rgba(255, 255, 255, 0.7);
+	font-family: "Source Sans Pro", sans-serif;
+	font-weight: 300;
+	/* Ultra-thin/Light */
+	font-size: 0.8rem;
+	letter-spacing: 0.1em;
+	cursor: pointer;
+	user-select: none;
+	transition: opacity 0.2s ease;
+
+	span {
+		transition: color 0.3s, font-weight 0.3s;
+
+		&.active {
+			color: #ffffff;
+			font-weight: 600;
+			text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+		}
+	}
+
+	&:hover {
+		color: rgba(255, 255, 255, 1.0);
+	}
+}
+
+/* Mobile adjustments to keep it safe from edges */
+@include breakpoint(small) {
+	#lang-toggle {
+		top: 1rem;
+		right: 1rem;
+		font-size: 0.7rem;
+	}
+}
+
+/* Language Switching Logic */
+/* Default is Korean (show KR, hide EN) */
+body.is-lang-kr .lang-en {
+	display: none !important;
+}
+
+/* English Mode (show EN, hide KR) */
+body.is-lang-en .lang-kr {
+	display: none !important;
+}
