@@ -1,5 +1,5 @@
 ---
---- 
+---
 @import 'libs/vars';
 @import 'libs/functions';
 @import 'libs/mixins';
@@ -50,23 +50,23 @@
 @import 'layout/footer';
 
 
-/* --- Language Toggle & Logic (Added) --- */
+/* --- Language Toggle & Logic (Updated) --- */
 
 #lang-toggle {
 	position: fixed;
 	top: 1.5rem;
 	right: 1.5rem;
 	z-index: 10001;
-	/* Higher than Wrapper/Overlay */
 	color: rgba(255, 255, 255, 0.7);
 	font-family: "Source Sans Pro", sans-serif;
 	font-weight: 300;
-	/* Ultra-thin/Light */
 	font-size: 0.8rem;
 	letter-spacing: 0.1em;
 	cursor: pointer;
 	user-select: none;
-	transition: opacity 0.2s ease;
+
+	/* 부드럽게 사라지고 나타나도록 트랜지션 추가 */
+	transition: opacity 0.3s ease, visibility 0.3s;
 
 	span {
 		transition: color 0.3s, font-weight 0.3s;
@@ -83,7 +83,17 @@
 	}
 }
 
-/* Mobile adjustments to keep it safe from edges */
+/* [핵심] 내용 창(Article)이 열리면 버튼 숨기기 */
+body.is-article-visible #lang-toggle {
+	opacity: 0;
+	/* 투명하게 */
+	visibility: hidden;
+	/* 클릭 안 되게 공간에서 숨김 */
+	pointer-events: none;
+	/* 마우스 이벤트 차단 */
+}
+
+/* Mobile adjustments */
 @include breakpoint(small) {
 	#lang-toggle {
 		top: 1rem;
@@ -93,12 +103,10 @@
 }
 
 /* Language Switching Logic */
-/* Default is Korean (show KR, hide EN) */
 body.is-lang-kr .lang-en {
 	display: none !important;
 }
 
-/* English Mode (show EN, hide KR) */
 body.is-lang-en .lang-kr {
 	display: none !important;
 }
