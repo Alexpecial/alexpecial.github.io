@@ -5,13 +5,16 @@ order: 4
 ---
 
 <section>
-	<strong>16</strong> Journal Articles &nbsp;&bull;&nbsp; 
-	<strong>11</strong> Conference Papers &nbsp;&bull;&nbsp; 
-	<strong>2</strong> Under Review
+	<strong>16</strong> <span class="lang-en">Journal Publications</span><span class="lang-kr"> 저널 논문</span> &nbsp;&bull;&nbsp; 
+	<strong>11</strong> <span class="lang-en">Conference Papers</span><span class="lang-kr"> 학회 논문</span> &nbsp;&bull;&nbsp; 
+	<strong>2</strong> <span class="lang-en">Under Review</span><span class="lang-kr"> 심사 중</span>
 
 	<hr />
 
-	<h3 class="major">Under Review</h3>
+	<h3 class="major">
+		<span class="lang-en">Under Review</span>
+		<span class="lang-kr">심사 중인 논문</span>
+	</h3>
 	<ul class="alt">
 		<li>
 			[2] <strong>Adaptive Sequence-to-Sequence Learning for Long-Term PMSM Temperature Prediction</strong><br>
@@ -24,7 +27,10 @@ order: 4
 		</li>
 	</ul>
 
-	<h3 class="major">Selected Journal Publications</h3>
+	<h3 class="major">
+		<span class="lang-en">Journal Publications</span>
+		<span class="lang-kr">저널 논문</span>
+	</h3>
 	<ul class="alt">
 		<li>
 			[16] <strong>Integrating Patient-Derived Organoids and Personalized Immunotherapy for Precision Pancreatic Cancer Management</strong><br>
@@ -108,7 +114,10 @@ order: 4
 		</li>
 	</ul>
 
-	<h3 class="major">Selected Conference Papers</h3>
+	<h3 class="major">
+		<span class="lang-en">Conference Papers</span>
+		<span class="lang-kr">학술대회 논문</span>
+	</h3>
 	<ul class="alt">
 		<li>
 			[11] <strong>Enabling machine learning-assisted discovery of polyamines for solid-state CO₂ capture</strong><br>
