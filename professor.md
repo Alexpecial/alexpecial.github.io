@@ -14,7 +14,7 @@ order: 1
 		</p>
 	</div>
 	<div class="lang-kr">
-		<h3 class="major">우현명 교수</h3>
+		<h3 class="major">우현명</h3>
 		<p>
 			<strong>조교수</strong><br>
 			바이오-로봇 시스템 공학과<br>
@@ -78,7 +78,7 @@ order: 1
 				Brookhaven National Laboratory, 2022 - 2023
 			</li>
 			<li>
-				<strong>Researcher</strong><br>
+				<strong>SeniorResearcher</strong><br>
 				LG Electronics, 2016 - 2017
 			</li>
 			<li>
@@ -96,16 +96,16 @@ order: 1
 				인천대학교, 2023 - 현재
 			</li>
 			<li>
-				<strong>연구원 (Research Associate)</strong><br>
-				Brookhaven National Laboratory, 2022 - 2023
+				<strong>연구원</strong><br>
+				미국 브룩헤이븐 국립 연구소, 2022 - 2023
 			</li>
 			<li>
-				<strong>연구원</strong><br>
+				<strong>주임연구원</strong><br>
 				LG 전자, 2016 - 2017
 			</li>
 			<li>
 				<strong>임베디드 소프트웨어 엔지니어</strong><br>
-				아이디스 (IDIS), 2010 - 2013
+				아이디스, 2010 - 2013
 			</li>
 		</ul>
 	</div>
@@ -164,7 +164,7 @@ order: 1
 				KIIECT 추계 학술대회, 2009
 			</li>
 			<li>
-				<strong>대상 (Grand Prize)</strong><br>
+				<strong>최우수상</strong><br>
 				아이디스(IDIS) & 전자신문 논문 공모전, 2009
 			</li>
 			<li>
