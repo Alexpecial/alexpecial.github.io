@@ -171,10 +171,6 @@ order: 1
 				<strong>최우등 졸업 (Summa Cum Laude)</strong><br>
 				연세대학교, 2008
 			</li>
-			<li>
-				<strong>성적 우수 장학금</strong><br>
-				연세대학교, 2005 - 2007
-			</li>
 		</ul>
 	</div>
 </section>
