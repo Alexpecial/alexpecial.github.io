@@ -13,16 +13,14 @@
 			</div>
 		</div>
 		<nav>
-			<nav>
-				<ul>
-					{% assign sorted_pages = site.pages | sort: "order" %} <!-- 이 줄 필수 -->
-					{% for page in sorted_pages %} <!-- site.pages 대신 sorted_pages 사용 -->
-					{% if page.title %}
-					<li><a href="#{{ page.title }}">{{ page.title }}</a></li>
-					{% endif %}
-					{% endfor %}
-				</ul>
-			</nav>
+			<ul>
+				{% assign sorted_pages = site.pages | sort: "order" %} <!-- 이 줄 필수 -->
+				{% for page in sorted_pages %} <!-- site.pages 대신 sorted_pages 사용 -->
+				{% if page.title %}
+				<li><a href="#{{ page.title }}">{{ page.title }}</a></li>
+				{% endif %}
+				{% endfor %}
+			</ul>
 		</nav>
 	</header>
 
