@@ -258,4 +258,28 @@ order: 1
 		</ul>
 	</div>
 
+	<div class="lang-en">
+		<h4 class="major">Teaching</h4>
+		<ul class="alt">
+			<li><strong>Deep Learning (4-1)</strong></li>
+			<li><strong>Image Signal Processing (4-2)</strong></li>
+			<li><strong>Digital Signal Processing (3-2)</strong></li>
+			<li><strong>Probability and Statistics (3-1)</strong></li>
+			<li><strong>Electromagnetics (2-2)</strong></li>
+			<li><strong>Calculus I (1-1)</strong></li>
+		</ul>
+	</div>
+
+	<div class="lang-kr">
+		<h4 class="major">강의</h4>
+		<ul class="alt">
+			<li><strong>딥러닝 (4-1)</strong></li>
+			<li><strong>영상신호처리 (4-2)</strong></li>
+			<li><strong>디지털신호처리 (3-2)</strong></li>
+			<li><strong>확률과 통계 (3-1)</strong></li>
+			<li><strong>전자기학 (2-2)</strong></li>
+			<li><strong>대학수학 I (1-1)</strong></li>
+		</ul>
+	</div>
+
 </section>
