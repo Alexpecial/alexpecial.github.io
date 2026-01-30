@@ -78,7 +78,7 @@ order: 1
 				Brookhaven National Laboratory, 2022 - 2023
 			</li>
 			<li>
-				<strong>SeniorResearcher</strong><br>
+				<strong>Senior Researcher</strong><br>
 				LG Electronics, 2016 - 2017
 			</li>
 			<li>
@@ -173,4 +173,89 @@ order: 1
 			</li>
 		</ul>
 	</div>
+
+	<div class="lang-en">
+		<h4 class="major">Invited Talks</h4>
+		<ul class="alt">
+			<li>
+				<strong>Accelerating Bayesian Optimal Experimental Design using Deep Learning</strong><br>
+				Inha University, Apr 2025
+			</li>
+			<li>
+				<strong>Designing and Optimizing High-Throughput Virtual Screening Pipelines</strong><br>
+				KIIS Spring Conference (Special Session), Apr 2025
+			</li>
+			<li>
+				<strong>Optimal Computational Screening Campaign</strong><br>
+				Yonsei University, Oct 2024
+			</li>
+			<li>
+				<strong>Accelerating Objective-Driven Optimal Experimental Design using Machine Learning</strong><br>
+				Yonsei University, Oct 2023
+			</li>
+			<li>
+				<strong>Accelerating Objective-Driven Optimal Experimental Design using Machine Learning</strong><br>
+				Sungkyunkwan University, Apr 2023
+			</li>
+			<li>
+				<strong>Optimal Decision Making in High-Throughput Virtual Screening Pipelines</strong><br>
+				BioSeminar @ Texas A&M University, Apr 2022
+			</li>
+			<li>
+				<strong>Optimal Decision Making for Accelerating Scientific Discovery</strong><br>
+				CSI Seminar @ Brookhaven National Laboratory, Mar 2022
+			</li>
+			<li>
+				<strong>Machine Learning Enabled Adaptive Wireless Power Transmission System</strong><br>
+				BioSeminar @ Texas A&M University, Oct 2020
+			</li>
+			<li>
+				<strong>Accurate Biological Network Alignment through Iterative Optimal Mapping</strong><br>
+				BioSeminar @ Texas A&M University, Oct 2019
+			</li>
+		</ul>
+	</div>
+
+	<div class="lang-kr">
+		<h4 class="major">초청 강연</h4>
+		<ul class="alt">
+			<li>
+				<strong>Accelerating Bayesian Optimal Experimental Design using Deep Learning</strong><br>
+				인하대학교, 2025년 4월
+			</li>
+			<li>
+				<strong>Designing and Optimizing High-Throughput Virtual Screening Pipelines</strong><br>
+				한국지능시스템학회(KIIS) 춘계 학술대회 특별세션, 2025년 4월
+			</li>
+			<li>
+				<strong>Optimal Computational Screening Campaign</strong><br>
+				연세대학교, 2024년 10월
+			</li>
+			<li>
+				<strong>Accelerating Objective-Driven Optimal Experimental Design using Machine Learning</strong><br>
+				연세대학교, 2023년 10월
+			</li>
+			<li>
+				<strong>Accelerating Objective-Driven Optimal Experimental Design using Machine Learning</strong><br>
+				성균관대학교, 2023년 4월
+			</li>
+			<li>
+				<strong>Optimal Decision Making in High-Throughput Virtual Screening Pipelines</strong><br>
+				텍사스 A&M 대학교 (BioSeminar), 2022년 4월
+			</li>
+			<li>
+				<strong>Optimal Decision Making for Accelerating Scientific Discovery</strong><br>
+				브룩헤이븐 국립 연구소 (CSI Seminar), 2022년 3월
+			</li>
+			<li>
+				<strong>Machine Learning Enabled Adaptive Wireless Power Transmission System</strong><br>
+				텍사스 A&M 대학교 (BioSeminar), 2020년 10월
+			</li>
+			<li>
+				<strong>Accurate Biological Network Alignment through Iterative Optimal Mapping</strong><br>
+				텍사스 A&M 대학교 (BioSeminar), 2019년 10월
+			</li>
+		</ul>
+	</div>
+
 </section>
