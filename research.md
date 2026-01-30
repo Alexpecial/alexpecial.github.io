@@ -221,10 +221,6 @@ order: 3
 		<h4 class="major">수행 중인 과제 (Current Projects)</h4>
 		<ul class="alt">
 			<li>
-				<strong>수면 무호흡 재활 치료를 위한 구강 착용/이식형 신경 자극기 개발</strong><br>
-				알키미스트 프로젝트, 한국산업기술진흥원(KIAT), 2025 - 현재
-			</li>
-			<li>
 				<strong>고효율 가상 탐색(HTVS) 파이프라인에서의 강화학습 기반 최적 의사 결정</strong><br>
 				생애첫연구, 한국연구재단(NRF), 2023 - 현재
 			</li>
@@ -236,6 +232,10 @@ order: 3
 
 		<h4 class="major">완료된 과제 (Completed Projects)</h4>
 		<ul class="alt">
+			<li>
+				<strong>수면 무호흡 재활 치료를 위한 구강 착용/이식형 신경 자극기 개발</strong><br>
+				알키미스트 프로젝트, 한국산업기술진흥원(KIAT), 2025
+			</li>
 			<li>
 				<strong>목적 기반 최적 실험 설계를 위한 머신러닝 활용 지식 발견</strong><br>
 				교내연구, 인천대학교, 2024 - 2025
