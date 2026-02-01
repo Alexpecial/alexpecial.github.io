@@ -7,7 +7,7 @@
 			<span class="icon {{ site.icon }}"></span>
 		</div> -->
 		<div class="logo">
-			<a href="#gallery" class="icon {{ site.icon }}" style="text-decoration: none; border: 0;"></a>
+			<a href="#Gallery" class="icon {{ site.icon }}" style="text-decoration: none; border: 0;"></a>
 		</div>
 		<div class="content">
 			<div class="inner">
@@ -19,7 +19,10 @@
 			<ul>
 				{% assign sorted_pages = site.pages | sort: "order" %} <!-- 이 줄 필수 -->
 				{% for page in sorted_pages %} <!-- site.pages 대신 sorted_pages 사용 -->
-				{% if page.title %}
+				<!-- {% if page.title %}
+				<li><a href="#{{ page.title }}">{{ page.title }}</a></li>
+				{% endif %} -->
+				{% if page.title and page.title != 'Gallery' %}
 				<li><a href="#{{ page.title }}">{{ page.title }}</a></li>
 				{% endif %}
 				{% endfor %}
