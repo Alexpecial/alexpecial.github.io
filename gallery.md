@@ -5,9 +5,9 @@ image: ""
 order: 10
 # 여기에 사진 파일명을 리스트로 적어주세요 (assets/photos/ 폴더 기준)
 photos:
-  - filename: "photo1.jpg" # 예시: 실제 파일명으로 바꾸세요
-  - filename: "photo2.jpg"
-  - filename: "photo3.jpg"
+  - filename: "20210110.jpg" # 예시: 실제 파일명으로 바꾸세요
+  - filename: "20210424.jpg"
+  - filename: "20210603.jpg"
   # 계속 추가 가능
 ---
 
