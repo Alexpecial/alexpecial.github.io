@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Gallery
-image: ""
+# image: ""
 order: 10
 # 여기에 사진 파일명을 리스트로 적어주세요 (assets/photos/ 폴더 기준)
 photos:
