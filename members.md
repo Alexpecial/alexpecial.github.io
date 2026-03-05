@@ -58,6 +58,10 @@ order: 2
 			<span class="lang-en"><strong>Yunwoo Lee</strong></span>
 			<span class="lang-kr"><strong>이윤우</strong></span>
 		</li>
+		<li>
+			<span class="lang-en"><strong>Juho Lee</strong></span>
+			<span class="lang-kr"><strong>이주호</strong></span>
+		</li>
 	</ul>
 
 	<hr />
@@ -68,12 +72,12 @@ order: 2
 	</h3>
 	<ul>
 		<li>
-			<span class="lang-en"><strong>Juhyun Yeom</strong> (M.S. Student, Yonsei University)</span>
-			<span class="lang-kr"><strong>염주현</strong> (연세대학교 석사 과정)</span>
+			<span class="lang-en"><strong>Juhyun Yeom</strong> (Initial Placement: Graduate Student, Yonsei University)</span>
+			<span class="lang-kr"><strong>염주현</strong> (첫 소속기관: 연세대학교 대학원)</span>
 		</li>
 		<li>
-			<span class="lang-en"><strong>Jiho Han</strong> (Hanwha Robotics Bootcamp)</span>
-			<span class="lang-kr"><strong>한지호</strong> (한화 로보틱스 부트캠프)</span>
+			<span class="lang-en"><strong>Jiho Han</strong> (Initial Placement: Hanwha Robotics)</span>
+			<span class="lang-kr"><strong>한지호</strong> (첫 소속기관: 한화 로보틱스)</span>
 		</li>
 	</ul>
 </section>
